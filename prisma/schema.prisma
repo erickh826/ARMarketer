@@ -16,7 +16,22 @@ enum ImageTargetCompileStatus {
 enum ARContentType {
   MODEL_3D
   PANORAMA_360
+  VIDEO_360
   IMAGE_TRACKING
+}
+
+enum MediaAssetKind {
+  MODEL_3D
+  PANORAMA_360
+  VIDEO_360
+  AUDIO
+}
+
+enum MediaAssetStatus {
+  UPLOADED
+  PROCESSING
+  READY
+  FAILED
 }
 
 model Project {
@@ -28,6 +43,29 @@ model Project {
   updatedAt     DateTime       @updatedAt
   imageTargets  ImageTarget[]
   experiences   ARExperience[]
+  mediaAssets   MediaAsset[]
+}
+
+model MediaAsset {
+  id              String           @id @default(cuid())
+  projectId       String
+  name            String
+  kind            MediaAssetKind
+  originalUrl     String
+  processedUrl    String?
+  sourceFormat    String?
+  processedFormat String?
+  fileSizeBytes   BigInt?
+  status          MediaAssetStatus @default(UPLOADED)
+  metadata        Json?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  project         Project          @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  experiences     ARExperience[]
+
+  @@index([projectId])
+  @@index([kind])
+  @@index([status])
 }
 
 model ImageTarget {
@@ -54,6 +92,7 @@ model ARExperience {
   projectId         String
   name              String
   imageTargetId     String?
+  mediaAssetId      String?
   contentType       ARContentType
   contentSceneId    String?
   transform         Json?
@@ -63,9 +102,11 @@ model ARExperience {
   updatedAt         DateTime       @updatedAt
   project           Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
   imageTarget       ImageTarget?   @relation("TargetExperiences", fields: [imageTargetId], references: [id], onDelete: SetNull)
+  mediaAsset        MediaAsset?    @relation(fields: [mediaAssetId], references: [id], onDelete: SetNull)
   boundByTarget     ImageTarget?   @relation("BoundExperience")
 
   @@index([projectId])
   @@index([imageTargetId])
+  @@index([mediaAssetId])
   @@index([contentType])
 }

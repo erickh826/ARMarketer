@@ -44,9 +44,11 @@ const Loader = () => {
 interface ModelProps {
   url: string;
   type: 'obj' | 'fbx' | 'glb';
+  textureUrl?: string;
+  normalUrl?: string;
 }
 
-const Model = ({ url, type }: ModelProps) => {
+const Model = ({ url, type, textureUrl, normalUrl }: ModelProps) => {
   let model: THREE.Group | THREE.Object3D;
 
   if (type === 'fbx') {
@@ -54,13 +56,31 @@ const Model = ({ url, type }: ModelProps) => {
   } else if (type === 'obj') {
     model = useLoader(OBJLoader, url);
   } else {
-    // glb case - simplified for now
     return null; 
   }
 
+  // Load textures if provided
+  const diffuseTexture = textureUrl ? useLoader(THREE.TextureLoader, textureUrl) : null;
+  const normalTexture = normalUrl ? useLoader(THREE.TextureLoader, normalUrl) : null;
+
   useEffect(() => {
+    if (diffuseTexture) {
+      diffuseTexture.colorSpace = THREE.SRGBColorSpace;
+      diffuseTexture.wrapS = diffuseTexture.wrapT = THREE.RepeatWrapping;
+    }
+
+    model.traverse((child: any) => {
+      if (child.isMesh) {
+        if (diffuseTexture || normalTexture) {
+          const material = child.material as THREE.MeshStandardMaterial;
+          if (diffuseTexture) material.map = diffuseTexture;
+          if (normalTexture) material.normalMap = normalTexture;
+          material.needsUpdate = true;
+        }
+      }
+    });
+
     return () => {
-      // Manual cleanup for large models
       model.traverse((child: any) => {
         if (child.isMesh) {
           child.geometry.dispose();
@@ -72,7 +92,7 @@ const Model = ({ url, type }: ModelProps) => {
         }
       });
     };
-  }, [model]);
+  }, [model, diffuseTexture, normalTexture]);
 
   return <primitive object={model} />;
 };
@@ -89,16 +109,18 @@ const cleanMaterial = (material: any) => {
 interface ModelViewerProps {
   url: string;
   type: 'obj' | 'fbx' | 'glb';
+  textureUrl?: string;
+  normalUrl?: string;
 }
 
-export const ModelViewer: React.FC<ModelViewerProps> = ({ url, type }) => {
+export const ModelViewer: React.FC<ModelViewerProps> = ({ url, type, textureUrl, normalUrl }) => {
   return (
     <div style={{ width: '100%', height: '100vh', backgroundColor: '#171717', position: 'relative' }}>
       <Canvas shadows dpr={[1, 2]}>
         <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={50} />
         <Suspense fallback={<Loader />}>
-          <Stage environment="city" intensity={0.5} contactShadow={true}>
-            <Model url={url} type={type} />
+          <Stage environment="city" intensity={0.5} shadows>
+            <Model url={url} type={type} textureUrl={textureUrl} normalUrl={normalUrl} />
           </Stage>
         </Suspense>
         <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 1.75} />

@@ -9,4 +9,5 @@
 
 ## 3.3 資料模型（核心新增）
 - **ImageTarget:** id, project_id, name, source_image_url, compiled_mind_url, compile_status, physical_width_cm, bound_experience_id
-- **ARExperience:** id, project_id, name, image_target_id, content_type, content_scene_id, transform, animation_config, audio_url
+- **ARExperience:** id, project_id, name, image_target_id, media_asset_id, content_type, content_scene_id, transform, animation_config, audio_url
+- **MediaAsset:** id, project_id, name, kind, original_url, processed_url, source_format, processed_format, file_size_bytes, status, metadata
