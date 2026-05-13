@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect, useMemo } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Canvas, useLoader } from '@react-three/fiber';
 import { OrbitControls, PerspectiveCamera, useProgress, Html, Stage, useFBX } from '@react-three/drei';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
@@ -50,7 +50,6 @@ interface ModelProps {
 
 const cleanMaterial = (material: THREE.Material) => {
   material.dispose();
-  // Using a more robust way to dispose textures
   Object.values(material).forEach((value) => {
     if (value && typeof value === 'object' && 'isTexture' in value && value.isTexture) {
       (value as THREE.Texture).dispose();
@@ -62,19 +61,17 @@ const OBJModel = ({ url, texture, normal }: { url: string; texture?: THREE.Textu
   const obj = useLoader(OBJLoader, url);
   
   useEffect(() => {
-    if (texture) {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    }
-
     obj.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        if (texture || normal) {
-          const material = child.material as THREE.MeshStandardMaterial;
-          if (texture) material.map = texture;
-          if (normal) material.normalMap = normal;
-          material.needsUpdate = true;
+        const material = child.material as THREE.MeshStandardMaterial;
+        if (texture) {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          material.map = texture;
         }
+        if (normal) material.normalMap = normal;
+        material.needsUpdate = true;
       }
     });
 
@@ -99,19 +96,17 @@ const FBXModel = ({ url, texture, normal }: { url: string; texture?: THREE.Textu
   const fbx = useFBX(url);
   
   useEffect(() => {
-    if (texture) {
-      texture.colorSpace = THREE.SRGBColorSpace;
-      texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
-    }
-
     fbx.traverse((child) => {
       if (child instanceof THREE.Mesh) {
-        if (texture || normal) {
-          const material = child.material as THREE.MeshStandardMaterial;
-          if (texture) material.map = texture;
-          if (normal) material.normalMap = normal;
-          material.needsUpdate = true;
+        const material = child.material as THREE.MeshStandardMaterial;
+        if (texture) {
+          texture.colorSpace = THREE.SRGBColorSpace;
+          texture.wrapS = THREE.RepeatWrapping;
+          texture.wrapT = THREE.RepeatWrapping;
+          material.map = texture;
         }
+        if (normal) material.normalMap = normal;
+        material.needsUpdate = true;
       }
     });
 
@@ -133,11 +128,9 @@ const FBXModel = ({ url, texture, normal }: { url: string; texture?: THREE.Textu
 };
 
 const ModelContent = ({ url, type, textureUrl, normalUrl }: ModelProps) => {
-  // Always call loaders to comply with hook rules, but use null if not needed
   const diffuseTexture = useLoader(THREE.TextureLoader, textureUrl || '');
   const normalTexture = useLoader(THREE.TextureLoader, normalUrl || '');
   
-  // Only use textures if URLs were provided
   const texture = textureUrl ? diffuseTexture : undefined;
   const normal = normalUrl ? normalTexture : undefined;
 
