@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum ImageTargetCompileStatus {
+  PENDING
+  PROCESSING
+  READY
+  FAILED
+}
+
+enum ARContentType {
+  MODEL_3D
+  PANORAMA_360
+  IMAGE_TRACKING
+}
+
+model Project {
+  id            String         @id @default(cuid())
+  name          String
+  slug          String         @unique
+  description   String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  imageTargets  ImageTarget[]
+  experiences   ARExperience[]
+}
+
+model ImageTarget {
+  id                 String                   @id @default(cuid())
+  projectId          String
+  name               String
+  sourceImageUrl     String
+  compiledMindUrl    String?
+  compileStatus      ImageTargetCompileStatus @default(PENDING)
+  physicalWidthCm    Decimal?                 @db.Decimal(6, 2)
+  boundExperienceId  String?                  @unique
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+  project            Project                  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  boundExperience    ARExperience?            @relation("BoundExperience", fields: [boundExperienceId], references: [id], onDelete: SetNull)
+  experiences        ARExperience[]           @relation("TargetExperiences")
+
+  @@index([projectId])
+  @@index([compileStatus])
+}
+
+model ARExperience {
+  id                String         @id @default(cuid())
+  projectId         String
+  name              String
+  imageTargetId     String?
+  contentType       ARContentType
+  contentSceneId    String?
+  transform         Json?
+  animationConfig   Json?
+  audioUrl          String?
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  project           Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  imageTarget       ImageTarget?   @relation("TargetExperiences", fields: [imageTargetId], references: [id], onDelete: SetNull)
+  boundByTarget     ImageTarget?   @relation("BoundExperience")
+
+  @@index([projectId])
+  @@index([imageTargetId])
+  @@index([contentType])
+}
