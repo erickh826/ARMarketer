@@ -9,6 +9,8 @@
 - [系統架構 (Architecture)](./docs/plan/architecture.md)：技術堆疊與資料模型。
 - [分階段開發計劃 (Phases)](./docs/plan/phases.md)：10 週 MVP 開發時程。
 - [技術與檔案策略 (Strategy)](./docs/plan/strategy.md)：Blender 轉檔 Pipeline 與效能優化。
+- [Migration 與 Seed 規劃](./docs/plan/migration-seed.md)：Prisma migration、seed 與本地初始化策略。
+- [W3 Pipeline Asset Flow](./docs/plan/pipeline-asset-flow.md)：原始素材、轉檔資產與發布鏈路。
 - [驗收標準與風險 (Validation)](./docs/plan/validation.md)：品質門檻與風險管理。
 - [投資報酬分析 (ROI)](./docs/plan/roi.md)：成本效益與商業分析。
 
