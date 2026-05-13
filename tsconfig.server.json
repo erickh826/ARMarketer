@@ -1,0 +1,22 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "target": "ES2022",
+    "outDir": "dist/server",
+    "rootDir": ".",
+    "noEmit": true,
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true
+  },
+  "include": [
+    "prisma/**/*.ts",
+    "src/lib/server/**/*.ts",
+    "src/app/api/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
