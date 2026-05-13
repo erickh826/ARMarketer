@@ -158,7 +158,7 @@ export const ModelViewer: React.FC<ModelViewerProps> = ({ url, type, textureUrl,
       <Canvas shadows dpr={[1, 2]}>
         <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={50} />
         <Suspense fallback={<Loader />}>
-          <Stage environment="city" intensity={0.5} contactShadow={true}>
+          <Stage environment="city" intensity={0.5}>
             <ModelContent url={url} type={type} textureUrl={textureUrl} normalUrl={normalUrl} />
           </Stage>
         </Suspense>
