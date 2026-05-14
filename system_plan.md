@@ -8,6 +8,8 @@
 - [專案概覽 (Overview)](./docs/plan/overview.md)：目標、核心痛點與需求定義。
 - [系統架構 (Architecture)](./docs/plan/architecture.md)：技術堆疊與資料模型。
 - [分階段開發計劃 (Phases)](./docs/plan/phases.md)：10 週 MVP 開發時程。
+- [目前實際進度 (Current Status)](./docs/plan/current-status.md)：目前 repo 與計劃對照狀態。
+- [Phase 1 Checklist](./docs/plan/phase1-checklist.md)：每週工作與 Gate 記錄。
 - [技術與檔案策略 (Strategy)](./docs/plan/strategy.md)：Blender 轉檔 Pipeline 與效能優化。
 - [Migration 與 Seed 規劃](./docs/plan/migration-seed.md)：Prisma migration、seed 與本地初始化策略。
 - [W3 Pipeline Asset Flow](./docs/plan/pipeline-asset-flow.md)：原始素材、轉檔資產與發布鏈路。

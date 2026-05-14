@@ -9,12 +9,23 @@
     "noEmit": true,
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "ignoreDeprecations": "6.0",
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "@server/*": [
+        "server/*"
+      ]
+    }
   },
   "include": [
     "prisma/**/*.ts",
     "src/lib/server/**/*.ts",
-    "src/app/api/**/*.ts"
+    "src/app/api/**/*.ts",
+    "server/**/*.ts"
   ],
   "exclude": [
     "node_modules"

@@ -1,8 +1,10 @@
 import React, { Suspense, useEffect } from 'react';
 import { Canvas, useLoader } from '@react-three/fiber';
-import { OrbitControls, PerspectiveCamera, useProgress, Html, Stage, useFBX } from '@react-three/drei';
+import { OrbitControls, PerspectiveCamera, useProgress, Html, Stage, useFBX, useGLTF } from '@react-three/drei';
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import * as THREE from 'three';
+
+const EMPTY_TEXTURE_DATA_URL = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 
 // Loading Progress Component
 const Loader = () => {
@@ -127,22 +129,59 @@ const FBXModel = ({ url, texture, normal }: { url: string; texture?: THREE.Textu
   return <primitive object={fbx} />;
 };
 
-const ModelContent = ({ url, type, textureUrl, normalUrl }: ModelProps) => {
-  const diffuseTexture = useLoader(THREE.TextureLoader, textureUrl || '');
-  const normalTexture = useLoader(THREE.TextureLoader, normalUrl || '');
-  
+const GLBModel = ({ url }: { url: string }) => {
+  const gltf = useGLTF(url, true);
+
+  useEffect(() => {
+    gltf.scene.traverse((child) => {
+      if (child instanceof THREE.Mesh) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach((material) => {
+            material.needsUpdate = true;
+          });
+        } else {
+          child.material.needsUpdate = true;
+        }
+      }
+    });
+
+    return () => {
+      gltf.scene.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.geometry.dispose();
+          if (Array.isArray(child.material)) {
+            child.material.forEach(cleanMaterial);
+          } else {
+            cleanMaterial(child.material);
+          }
+        }
+      });
+    };
+  }, [gltf]);
+
+  return <primitive object={gltf.scene} />;
+};
+
+const TexturedModelContent = ({ url, type, textureUrl, normalUrl }: ModelProps) => {
+  const diffuseTexture = useLoader(THREE.TextureLoader, textureUrl ?? EMPTY_TEXTURE_DATA_URL);
+  const normalTexture = useLoader(THREE.TextureLoader, normalUrl ?? EMPTY_TEXTURE_DATA_URL);
+
   const texture = textureUrl ? diffuseTexture : undefined;
   const normal = normalUrl ? normalTexture : undefined;
 
   if (type === 'fbx') {
     return <FBXModel url={url} texture={texture} normal={normal} />;
   }
-  
-  if (type === 'obj') {
-    return <OBJModel url={url} texture={texture} normal={normal} />;
+
+  return <OBJModel url={url} texture={texture} normal={normal} />;
+};
+
+const ModelContent = ({ url, type, textureUrl, normalUrl }: ModelProps) => {
+  if (type === 'glb') {
+    return <GLBModel url={url} />;
   }
 
-  return null;
+  return <TexturedModelContent url={url} type={type} textureUrl={textureUrl} normalUrl={normalUrl} />;
 };
 
 interface ModelViewerProps {
