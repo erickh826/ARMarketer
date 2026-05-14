@@ -88,19 +88,18 @@
 
 ## Gate 2 — 100MB-class asset can be loaded and operated
 
-- **Status:** `IN PROGRESS / NOT PASSED`
+- **Status:** `IN PROGRESS / PLAN COMPLETE`
 - **What exists:**
   - viewer skeleton
   - progress UI
   - dispose logic
-  - OBJ/FBX support
+  - OBJ/FBX/GLB support
+  - **TASK-002 test plan and report structure**
 - **What is missing:**
   - 100MB+ benchmark asset evidence
-  - memory observations
-  - first meaningful interaction timing
-  - crash / stall record
-  - written report
-- **Decision:** do **not** mark Gate 2 passed yet
+  - execution of the test plan on target device matrix
+  - final written report with performance data
+- **Decision:** do **not** mark Gate 2 passed yet; awaiting execution data
 
 ## Gate 3 — pipeline can produce acceptable optimized GLB
 

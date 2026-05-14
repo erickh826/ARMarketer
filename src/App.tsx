@@ -9,9 +9,13 @@ function App() {
   //   normalUrl: "/concrete-rubble-scan/textures/tex_u1_v1_normal.jpg"
   // };
 
-  // GLB smoke test (TASK-001A)
+  // Tier 0 — minimal cube, confirms GLB load path only (not Gate 2 evidence)
+  // const model = { url: "/test-assets/test-cube.glb", type: "glb" as const };
+
+  // Tier 1 — low-poly wood crate (~1.6 MB), Gate 2 intermediate baseline (TASK-002)
+  // Swap url below with a 100MB-class asset for full Gate 2 pass
   const model = {
-    url: "/test-assets/test-cube.glb",
+    url: "/test-assets/cyberpunk_city.glb",
     type: "glb" as const
   };
 

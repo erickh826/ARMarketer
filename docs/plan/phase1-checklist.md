@@ -21,8 +21,12 @@
   - Evidence: `useFBX` in `ModelViewer.tsx`
 - [x] GLB loading implemented
   - Evidence: `useGLTF` branch in `ModelViewer.tsx`, `public/test-assets/test-cube.glb`, `src/App.tsx`
-- [ ] 100MB+ stress test executed
-- [ ] Gate 2 report written
+- [-] Gate 2 test plan / review / validation completed
+  - Evidence: `docs/agents/results/TASK-002-gemini.md`, `docs/agents/reviews/TASK-002-review-cursor.md`, `docs/agents/results/TASK-002-validation-codex.md`
+- [-] 100MB+ stress test executed
+  - Evidence: `docs/session/2026-05-14-gate2-report.md` (desktop pass with 138 MB GLB; mobile pending)
+- [x] Gate 2 report written
+  - Evidence: `docs/session/2026-05-14-gate2-report.md`
 - [x] Prisma core schema drafted
   - Evidence: `prisma/schema.prisma`
 - [ ] Auth strategy implemented
@@ -92,6 +96,6 @@
 | Gate | Goal | Current Status | Notes |
 | :--- | :--- | :--- | :--- |
 | Gate 1 | MindAR stable on target phones | `evidence-missing` | POC exists, formal device validation missing |
-| Gate 2 | 100MB-class asset loadability proven | `in-progress` | Viewer exists, no benchmark report yet |
+| Gate 2 | 100MB-class asset loadability proven | `desktop-passed-mobile-pending` | A 138 MB GLB loaded in under 10s and interacted smoothly on desktop with no console errors or context loss; mobile validation is still pending |
 | Gate 3 | Optimized GLB pipeline output accepted | `not-passed` | Scripts exist, no recorded validated output |
 | Gate 4 | 3 legacy cards rebuilt and accepted | `not-started` | Future milestone |

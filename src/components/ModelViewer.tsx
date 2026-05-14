@@ -4,6 +4,10 @@ import { OrbitControls, PerspectiveCamera, useProgress, Html, Stage, useFBX, use
 import { OBJLoader } from 'three/examples/jsm/loaders/OBJLoader.js';
 import * as THREE from 'three';
 
+// Use locally-served Draco decoder for reproducible load-time measurements.
+// Avoids CDN latency variance that would corrupt Gate 2 TTR results.
+useGLTF.setDecoderPath('/draco/');
+
 const EMPTY_TEXTURE_DATA_URL = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
 
 // Loading Progress Component
