@@ -6,6 +6,8 @@
 - [專案概覽](./overview.md)
 - [系統架構](./architecture.md)
 - [分階段開發計劃](./phases.md)
+- [目前實際進度](./current-status.md)
+- [Phase 1 Checklist](./phase1-checklist.md)
 - [技術與檔案策略](./strategy.md)
 - [Migration 與 Seed 規劃](./migration-seed.md)
 - [W3 Pipeline Asset Flow](./pipeline-asset-flow.md)

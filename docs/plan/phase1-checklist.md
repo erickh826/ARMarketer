@@ -1,0 +1,95 @@
+# Phase 1 Checklist
+
+> Last updated: 2026-05-14
+> Status legend: `[x] done` / `[-] partial` / `[ ] not started`
+
+## W1 — Feasibility
+
+- [-] MindAR POC created
+  - Evidence: `public/poc.html`
+- [ ] Multi-device test matrix recorded
+- [ ] Gate 1 result logged with pass/fail decision
+- [ ] Fallback trigger defined if MindAR stability is insufficient
+
+## W2 — Viewer + Core Schema
+
+- [-] Viewer POC created
+  - Evidence: `src/components/ModelViewer.tsx`
+- [-] OBJ loading works in current sample app
+  - Evidence: `src/App.tsx`, `public/concrete-rubble-scan/**`
+- [-] FBX loading path exists
+  - Evidence: `useFBX` in `ModelViewer.tsx`
+- [ ] GLB loading implemented
+- [ ] 100MB+ stress test executed
+- [ ] Gate 2 report written
+- [-] Prisma core schema drafted
+  - Evidence: `prisma/schema.prisma`
+- [ ] Auth strategy implemented
+
+## W3 — Pipeline + Data Linkage
+
+- [-] Blender conversion pipeline skeleton exists
+  - Evidence: `pipeline/run_convert.sh`, `pipeline/scripts/convert.py`
+- [ ] Successful FBX -> GLB example artifact recorded
+- [ ] Before/after size comparison recorded
+- [ ] Quality review notes recorded
+- [-] `MediaAsset` lineage model exists
+- [ ] Derived asset flow tested end-to-end
+- [ ] Gate 3 result logged
+
+## W4 — Upload + Viewer Flow
+
+- [-] Upload authorization example route exists
+  - Evidence: `server/examples/next-app-router/app/api/assets/upload/route.ts`
+- [-] Local upload example route exists
+  - Evidence: `server/examples/next-app-router/app/uploads/[...path]/route.ts`
+- [ ] Example routes integrated into a real app host
+- [ ] Upload smoke test passed on actual host
+- [ ] Viewer can load asset published through the managed flow
+
+## W5 — Target / Editor Management
+
+- [ ] ImageTarget management API/UI
+- [ ] Dedicated target-experience binding workflow
+- [ ] Hotspot editor UI initial version
+
+## W6 — AR Experience Read Path
+
+- [ ] Viewer reads real CMS/DB-backed experience data
+- [ ] MindAR + React/R3F integration spike completed
+- [ ] ARExperience CRUD wired into real app flow
+
+## W7 — Sharing
+
+- [ ] Share link flow
+- [ ] QR generation flow
+- [ ] AR card generator UI
+
+## W8 — Stability
+
+- [ ] Mobile error handling
+- [ ] Loading state UX polish
+- [ ] Permission control
+- [ ] Data state management hardening
+
+## W9 — Acceptance
+
+- [ ] 3 legacy Zapworks cards rebuilt
+- [ ] Pressure / cache / CDN validation
+- [ ] Gate 4 result logged
+
+## W10 — Launch
+
+- [ ] Deployment hardening
+- [ ] Monitoring
+- [ ] Backup
+- [ ] MVP release checklist signed off
+
+## Gate Result Log
+
+| Gate | Goal | Current Status | Notes |
+| :--- | :--- | :--- | :--- |
+| Gate 1 | MindAR stable on target phones | `evidence-missing` | POC exists, formal device validation missing |
+| Gate 2 | 100MB-class asset loadability proven | `in-progress` | Viewer exists, no benchmark report yet |
+| Gate 3 | Optimized GLB pipeline output accepted | `not-passed` | Scripts exist, no recorded validated output |
+| Gate 4 | 3 legacy cards rebuilt and accepted | `not-started` | Future milestone |
