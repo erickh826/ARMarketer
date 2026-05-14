@@ -5,7 +5,7 @@
 - Task ID: `TASK-001`
 - Role: `implementer`
 - Assigned agent: `codex`
-- Status: `todo`
+- Status: `completed`
 - Priority: `high`
 
 ## Objective
@@ -15,9 +15,10 @@
 ## Current Repo Truth
 
 - Read `docs/agents/shared-context.md` first.
-- `ModelViewer.tsx` currently supports OBJ and FBX loading.
-- The `type` union already includes `glb`, but no GLB loader branch is implemented.
-- `docs/session/2026-05-14-task-order.md` identifies this as the highest-leverage next task.
+- `ModelViewer.tsx` supports OBJ, FBX, and GLB loading.
+- A minimal GLB smoke-test asset exists at `public/test-assets/test-cube.glb`.
+- `src/App.tsx` is currently pointed at the GLB smoke-test path.
+- Runtime browser smoke testing is still pending because of the current local `dist/` EPERM blocker.
 
 ## Owned Files
 
@@ -50,3 +51,4 @@
 ## Notes
 
 - Keep scope tight.
+- Follow-up work is tracked in `docs/agents/tasks/TASK-001A.md`.

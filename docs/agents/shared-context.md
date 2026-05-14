@@ -17,7 +17,7 @@
 
 1. MindAR feasibility POC exists in `public/poc.html`, but formal Gate 1 evidence is still missing.
 2. Viewer skeleton exists in `src/components/ModelViewer.tsx`.
-3. GLB is the intended W3 pipeline output format, but the viewer does not fully support GLB yet.
+3. GLB is the intended W3 pipeline output format, and the viewer now supports GLB via `useGLTF` (with Draco). A smoke-test asset exists at `public/test-assets/test-cube.glb`.
 4. Prisma schema and backend services already exist; backend work should be framed as hardening/integration, not greenfield skeleton work.
 5. Upload routes exist as example code under `server/examples/next-app-router/`, but they are not yet integrated into the main app runtime.
 
@@ -30,11 +30,10 @@
 
 ## Current Recommended Priority
 
-1. add real GLB support to the viewer
-2. produce Gate 2 measurement evidence
-3. harden and integrate existing backend services
-4. define upload -> pipeline -> derived asset lifecycle
-5. then start MindAR + React/R3F architecture work
+1. produce Gate 2 measurement evidence (GLB viewer baseline now available)
+2. harden and integrate existing backend services
+3. define upload -> pipeline -> derived asset lifecycle
+4. then start MindAR + React/R3F architecture work
 
 ## Collaboration Rules
 

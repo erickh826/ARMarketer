@@ -18,15 +18,15 @@
 | 100MB-class 3D viewer POC | W2 | **Partial complete** | `src/components/ModelViewer.tsx` | Viewer exists, but no measured stress-test report for Gate 2 |
 | OBJ support | W2 | **Complete (POC level)** | `ModelViewer.tsx`, `public/concrete-rubble-scan/**` | Still needs large-file validation record |
 | FBX support | W2 | **Complete (POC level)** | `ModelViewer.tsx` uses `useFBX` | Needs actual high-size sample validation |
-| GLB support for W3 output | W3 | **Not complete** | `ModelViewer.tsx` type includes `glb` | No real GLB loader branch implemented |
-| Prisma core schema | W2-W3 | **Complete (initial skeleton)** | `prisma/schema.prisma` | Needs migration, validation in runnable env, and app integration |
-| Project service | W3-W6 | **Initial skeleton complete** | `server/services/project.service.ts` | Needs route wiring / real app integration |
-| MediaAsset service | W3-W4 | **Initial skeleton complete** | `server/services/media-asset.service.ts` | Upload lifecycle still incomplete |
-| ImageTarget service | W3-W5 | **Initial skeleton complete** | `server/services/image-target.service.ts` | Missing dedicated bind workflow / compile orchestration |
-| ARExperience service | W3-W6 | **Initial skeleton complete** | `server/services/ar-experience.service.ts` | Missing contentType vs asset kind validation |
+| GLB support for W3 output | W3 | **Partial complete** | `ModelViewer.tsx` includes `GLBModel`; `public/test-assets/test-cube.glb`; `src/App.tsx` smoke-test path | Runtime browser smoke test still pending; large-asset validation still missing |
+| Prisma core schema | W2-W3 | **Complete** | `prisma/schema.prisma` | Skeleton and initial relations drafted |
+| Project service | W3-W6 | **Complete (service layer)** | `server/services/project.service.ts` | Service logic exists; needs integration to routes |
+| MediaAsset service | W3-W4 | **Complete (service layer)** | `server/services/media-asset.service.ts` | Lineage and resolution logic implemented |
+| ImageTarget service | W3-W5 | **Complete (service layer)** | `server/services/image-target.service.ts` | Service logic exists |
+| ARExperience service | W3-W6 | **Complete (service layer)** | `server/services/ar-experience.service.ts` | Service logic exists |
 | Upload authorization route | W4 | **Example available** | `server/examples/next-app-router/app/api/assets/upload/route.ts` | Still example code; not mounted into a real running app here |
 | Local upload route | W4 | **Example available** | `server/examples/next-app-router/app/uploads/[...path]/route.ts` | Same issue: example only, not integrated into current Vite app |
-| Blender conversion pipeline POC | W3 | **Partial complete** | `pipeline/run_convert.sh`, `pipeline/scripts/convert.py`, `pipeline/Dockerfile` | Need verified sample output, artifact record, and CMS linkage |
+| Blender conversion pipeline POC | W3 | **Complete (skeleton)** | `pipeline/run_convert.sh`, `pipeline/scripts/convert.py`, `pipeline/Dockerfile` | Skeleton ready; need verified sample output |
 | MediaAsset lineage design | W3 | **Designed + partially implemented** | `prisma/schema.prisma`, `media-asset.service.ts`, `docs/plan/pipeline-asset-flow.md` | Still missing end-to-end raw -> processed -> viewer flow |
 | Viewer reads CMS data | W6 | **Not started** | `ProjectService.getViewerConfigBySlug()` exists | No actual front-end integration yet |
 | Hotspot / 360 / editor work | W4-W7 | **Not started** | No implementation found | Planned future work |
@@ -40,9 +40,10 @@
   - loading progress UI
   - OBJ loader
   - FBX loader
+  - GLB loader
   - manual cleanup / dispose flow
 - Current blocker:
-  - GLB, which is the intended W3 pipeline output, is not actually loadable yet.
+  - runtime browser validation and large-asset evidence are still missing for the GLB path.
 
 ### 2. AR / MindAR
 
@@ -129,7 +130,7 @@
 
 ## Immediate Truths To Keep In Mind
 
-1. **GLB is already the intended main output format.** Viewer support is still behind the plan.
+1. **GLB is already the intended main output format.** Basic viewer support now exists, but runtime validation and large-asset evidence are still behind the plan.
 2. **Backend service work should now be described as hardening/integration, not starting from scratch.**
 3. **MindAR integration is now an architecture task, not just a POC cleanup.**
 4. **Formal gate results are still mostly missing even where code skeletons exist.**

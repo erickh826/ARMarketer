@@ -13,27 +13,29 @@
 
 ## W2 — Viewer + Core Schema
 
-- [-] Viewer POC created
+- [x] Viewer POC created
   - Evidence: `src/components/ModelViewer.tsx`
-- [-] OBJ loading works in current sample app
+- [x] OBJ loading works in current sample app
   - Evidence: `src/App.tsx`, `public/concrete-rubble-scan/**`
-- [-] FBX loading path exists
+- [x] FBX loading path exists
   - Evidence: `useFBX` in `ModelViewer.tsx`
-- [ ] GLB loading implemented
+- [x] GLB loading implemented
+  - Evidence: `useGLTF` branch in `ModelViewer.tsx`, `public/test-assets/test-cube.glb`, `src/App.tsx`
 - [ ] 100MB+ stress test executed
 - [ ] Gate 2 report written
-- [-] Prisma core schema drafted
+- [x] Prisma core schema drafted
   - Evidence: `prisma/schema.prisma`
 - [ ] Auth strategy implemented
 
 ## W3 — Pipeline + Data Linkage
 
-- [-] Blender conversion pipeline skeleton exists
+- [x] Blender conversion pipeline skeleton exists
   - Evidence: `pipeline/run_convert.sh`, `pipeline/scripts/convert.py`
 - [ ] Successful FBX -> GLB example artifact recorded
 - [ ] Before/after size comparison recorded
 - [ ] Quality review notes recorded
-- [-] `MediaAsset` lineage model exists
+- [x] `MediaAsset` lineage model exists
+  - Evidence: `prisma/schema.prisma`, `MediaAssetService`
 - [ ] Derived asset flow tested end-to-end
 - [ ] Gate 3 result logged
 

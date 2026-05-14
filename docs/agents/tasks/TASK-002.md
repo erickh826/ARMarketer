@@ -15,7 +15,10 @@
 ## Current Repo Truth
 
 - Read `docs/agents/shared-context.md` first.
-- `TASK-001` addresses the GLB viewer gap.
+- `TASK-001` and `TASK-001A` are completed.
+- A minimal GLB sample asset exists at `public/test-assets/test-cube.glb`.
+- `src/App.tsx` is configured to use the GLB smoke-test baseline.
+- Build verification now passes cleanly.
 - Gate 2 is not yet formally passed because no measured stress-test record exists.
 - `docs/plan/current-status.md` and `docs/plan/phase1-checklist.md` both treat Gate 2 evidence as missing.
 - This is a **main task**. Later review/validation should reuse the same `TaskId` (`TASK-002`) with different roles.
@@ -43,8 +46,11 @@
 - `docs/plan/current-status.md`
 - `docs/plan/phase1-checklist.md`
 - `docs/session/2026-05-14-task-order.md`
-- `docs/agents/results/TASK-001-validation-gemini.md`
+- `docs/agents/results/TASK-001A-deepseek.md`
+- `docs/agents/reviews/TASK-001A-review-codex.md`
+- `docs/agents/results/TASK-001A-validation-gemini.md`
 - `src/components/ModelViewer.tsx`
+- `src/App.tsx`
 
 ## Required Output
 
@@ -65,7 +71,7 @@
 
 ## Notes
 
-- This is the main task after `TASK-001` lifecycle is complete.
+- This is the main task after the `TASK-001` / `TASK-001A` lifecycle is complete.
 - Later review of this plan should use:
   - `TaskId = TASK-002`
   - `Role = reviewer`
