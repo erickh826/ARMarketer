@@ -43,8 +43,8 @@ The repo now has a desktop-confirmed large-asset viewer result, but the original
 
 | Field | Value |
 | :--- | :--- |
-| Filename | `low_poly_wood_crate.glb` |
-| Size | 138 MB |
+| Filename | `cyberpunk_city.glb` |
+| Size | 142,987,188 bytes (~136.36 MB) |
 | Format | GLB |
 
 ---
@@ -62,12 +62,16 @@ The repo now has a desktop-confirmed large-asset viewer result, but the original
 
 ## Interpretation
 
-- A **138 MB GLB** was loaded successfully on desktop in under 10 seconds.
+- A **~136 MB GLB** was loaded successfully on desktop in under 10 seconds.
 - Interaction remained smooth after load.
 - No console errors were observed.
 - No WebGL context loss occurred.
 
 This is strong positive evidence that the current viewer baseline can handle a large GLB on desktop hardware.
+
+### Asset correction note
+
+An earlier draft of this report referred to `low_poly_wood_crate.glb` as the large test asset. That was incorrect. The actual large desktop-tested asset is `cyberpunk_city.glb`. `low_poly_wood_crate.glb` is only ~1.7 MB and should be treated as an intermediate baseline asset, not the 100MB-class stress asset.
 
 ---
 

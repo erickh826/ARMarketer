@@ -25,3 +25,7 @@ dist-ssr
 
 resources/
 public/test-assets/
+
+
+pipeline/input/
+pipeline/output/

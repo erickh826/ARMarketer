@@ -12,10 +12,9 @@ function App() {
   // Tier 0 — minimal cube, confirms GLB load path only (not Gate 2 evidence)
   // const model = { url: "/test-assets/test-cube.glb", type: "glb" as const };
 
-  // Tier 1 — low-poly wood crate (~1.6 MB), Gate 2 intermediate baseline (TASK-002)
-  // Swap url below with a 100MB-class asset for full Gate 2 pass
+  // Tier 2 — factory LOD0 optimized (Draco+WebP, ~2.7 MB), TASK-003 pipeline evidence
   const model = {
-    url: "/test-assets/cyberpunk_city.glb",
+    url: "/test-assets/factory-lod0-opt.glb",
     type: "glb" as const
   };
 

@@ -1,6 +1,6 @@
 # Phase 1 Checklist
 
-> Last updated: 2026-05-14
+> Last updated: 2026-05-15
 > Status legend: `[x] done` / `[-] partial` / `[ ] not started`
 
 ## W1 — Feasibility
@@ -24,19 +24,23 @@
 - [-] Gate 2 test plan / review / validation completed
   - Evidence: `docs/agents/results/TASK-002-gemini.md`, `docs/agents/reviews/TASK-002-review-cursor.md`, `docs/agents/results/TASK-002-validation-codex.md`
 - [-] 100MB+ stress test executed
-  - Evidence: `docs/session/2026-05-14-gate2-report.md` (desktop pass with 138 MB GLB; mobile pending)
+  - Evidence: `docs/session/2026-05-14-gate2-report.md` (desktop large-asset test recorded), `docs/session/2026-05-14-gate2-mobile-report.md` (mobile validation blocked)
 - [x] Gate 2 report written
-  - Evidence: `docs/session/2026-05-14-gate2-report.md`
+  - Evidence: `docs/session/2026-05-14-gate2-report.md`, `docs/session/2026-05-14-gate2-mobile-report.md`
 - [x] Prisma core schema drafted
   - Evidence: `prisma/schema.prisma`
+- [x] Server typecheck bootstrap fixed
+  - Evidence: `package.json` now runs `prisma generate` before `typecheck:server`
 - [ ] Auth strategy implemented
 
 ## W3 — Pipeline + Data Linkage
 
 - [x] Blender conversion pipeline skeleton exists
   - Evidence: `pipeline/run_convert.sh`, `pipeline/scripts/convert.py`
-- [ ] Successful FBX -> GLB example artifact recorded
-- [ ] Before/after size comparison recorded
+- [-] Successful OBJ/FBX -> GLB example artifact recorded
+  - Evidence: `pipeline/output/20251228_004_RC_LOD0_opt.glb`, `public/test-assets/factory-lod0-opt.glb`, `docs/agents/suggestion/TASK-003-pipeline-suggestion-codex.md`
+- [-] Before/after size comparison recorded
+  - Evidence: `docs/agents/suggestion/TASK-003-pipeline-suggestion-codex.md`
 - [ ] Quality review notes recorded
 - [x] `MediaAsset` lineage model exists
   - Evidence: `prisma/schema.prisma`, `MediaAssetService`
@@ -96,6 +100,6 @@
 | Gate | Goal | Current Status | Notes |
 | :--- | :--- | :--- | :--- |
 | Gate 1 | MindAR stable on target phones | `evidence-missing` | POC exists, formal device validation missing |
-| Gate 2 | 100MB-class asset loadability proven | `desktop-passed-mobile-pending` | A 138 MB GLB loaded in under 10s and interacted smoothly on desktop with no console errors or context loss; mobile validation is still pending |
-| Gate 3 | Optimized GLB pipeline output accepted | `not-passed` | Scripts exist, no recorded validated output |
+| Gate 2 | 100MB-class asset loadability proven | `desktop-evidence-recorded-mobile-blocked` | Desktop large-asset evidence exists, but the desktop report has an asset-name mismatch to correct and mobile validation is blocked until a real phone/device-debugging setup is available |
+| Gate 3 | Optimized GLB pipeline output accepted | `preliminary-evidence-recorded` | A real OBJ -> optimized GLB conversion exists and size comparison was recorded, but runtime viewer validation, quality review, lineage proof, and formal Gate 3 report are still missing |
 | Gate 4 | 3 legacy cards rebuilt and accepted | `not-started` | Future milestone |

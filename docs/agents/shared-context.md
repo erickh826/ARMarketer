@@ -1,6 +1,6 @@
 # Shared Context
 
-> Last updated: 2026-05-14
+> Last updated: 2026-05-15
 > This file is the shared source of truth for external CLI agents working on this repo.
 
 ## Repo
@@ -11,29 +11,30 @@
 ## Current Stage
 
 - Phase: `Phase 1`
-- Status: `W2 complete / W3 in progress`
+- Status: `W3 in progress / Gate 3 Formalization`
 
 ## Current Truths
 
 1. MindAR feasibility POC exists in `public/poc.html`, but formal Gate 1 evidence is still missing.
-2. Viewer skeleton exists in `src/components/ModelViewer.tsx`.
-3. GLB is the intended W3 pipeline output format, and the viewer now supports GLB via `useGLTF` (with Draco). A smoke-test asset exists at `public/test-assets/test-cube.glb`.
-4. Prisma schema and backend services already exist; backend work should be framed as hardening/integration, not greenfield skeleton work.
-5. Upload routes exist as example code under `server/examples/next-app-router/`, but they are not yet integrated into the main app runtime.
+2. Viewer skeleton exists in `src/components/ModelViewer.tsx` and supports OBJ, FBX, and GLB.
+3. Optimized GLB is the primary pipeline output. Current test assets include `test-cube.glb` (tiny smoke asset), `low_poly_wood_crate.glb` (1.7MB), and `factory-lod0-opt.glb` (2.6MB optimized from 171MB).
+4. **Gate 2 Desktop Evidence Recorded:** Stress test with 100MB-class assets (e.g., `cyberpunk_city.glb`) completed on desktop; mobile validation is currently blocked.
+5. **R2 Decision:** Large source assets and pipeline outputs will be hosted on Cloudflare R2, not in Git.
+6. Prisma schema and backend services are functional (Project, MediaAsset, ImageTarget, ARExperience).
 
 ## Primary Planning Files
 
 - `system_plan.md`
 - `docs/plan/current-status.md`
 - `docs/plan/phase1-checklist.md`
-- `docs/session/2026-05-14-task-order.md`
+- `docs/session/2026-05-15-gate3-formalization-plan.md`
 
 ## Current Recommended Priority
 
-1. produce Gate 2 measurement evidence (GLB viewer baseline now available)
-2. harden and integrate existing backend services
-3. define upload -> pipeline -> derived asset lifecycle
-4. then start MindAR + React/R3F architecture work
+1. Execute Gate 3 formal verification (Visual smoke test + Lineage proof).
+2. Harden `convert_trimesh.py` and finalize the R2 storage contract.
+3. Re-attempt Gate 2 mobile validation once a remote debugging environment is available.
+4. Integrate existing backend services (Routes + Upload flow).
 
 ## Collaboration Rules
 
@@ -41,4 +42,4 @@
 - Do not silently expand scope.
 - If repo truth conflicts with assumptions, record the mismatch in the task result.
 - Always list files touched or reviewed.
-- Prefer short artifact files over long chat-only reasoning.
+- Reviewer agent label is `gemini`.

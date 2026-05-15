@@ -8,6 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "prisma:generate": "prisma generate",
+    "pretypecheck:server": "prisma generate",
     "typecheck:server": "tsc -p tsconfig.server.json --noEmit"
   },
   "dependencies": {
