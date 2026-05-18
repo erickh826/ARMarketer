@@ -1,30 +1,72 @@
 import { ModelViewer } from './components/ModelViewer';
 
-function App() {
-  // OBJ smoke test
-  // const model = {
-  //   url: "/concrete-rubble-scan/source/Rubble_Scan_2/Rubble_Scan_2.obj",
-  //   type: "obj" as const,
-  //   textureUrl: "/concrete-rubble-scan/textures/tex_u1_v1_diffuse.jpg",
-  //   normalUrl: "/concrete-rubble-scan/textures/tex_u1_v1_normal.jpg"
-  // };
+type ModelType = 'obj' | 'fbx' | 'glb';
 
-  // Tier 0 — minimal cube, confirms GLB load path only (not Gate 2 evidence)
-  // const model = { url: "/test-assets/test-cube.glb", type: "glb" as const };
+type ModelConfig = {
+  url: string;
+  type: ModelType;
+  textureUrl?: string;
+  normalUrl?: string;
+};
 
-  // Tier 2 — factory LOD0 optimized (Draco+WebP, ~2.7 MB), TASK-003 pipeline evidence
-  const model = {
-    url: "/test-assets/factory-lod0-opt.glb",
-    type: "glb" as const
+const DEFAULT_MODEL: ModelConfig = {
+  url: '/test-assets/factory-lod0-opt.glb',
+  type: 'glb'
+};
+
+function isModelType(value: string | null): value is ModelType {
+  return value === 'obj' || value === 'fbx' || value === 'glb';
+}
+
+function inferModelType(url: string): ModelType | undefined {
+  const normalizedUrl = url.toLowerCase();
+
+  if (normalizedUrl.endsWith('.obj')) {
+    return 'obj';
+  }
+
+  if (normalizedUrl.endsWith('.fbx')) {
+    return 'fbx';
+  }
+
+  if (normalizedUrl.endsWith('.glb') || normalizedUrl.endsWith('.gltf')) {
+    return 'glb';
+  }
+
+  return undefined;
+}
+
+function getModelFromSearchParams(): ModelConfig {
+  const searchParams = new URLSearchParams(window.location.search);
+  const requestedUrl = searchParams.get('url') ?? searchParams.get('model');
+  const requestedType = searchParams.get('type');
+
+  if (!requestedUrl) {
+    return DEFAULT_MODEL;
+  }
+
+  const type = isModelType(requestedType)
+    ? requestedType
+    : inferModelType(requestedUrl) ?? DEFAULT_MODEL.type;
+
+  return {
+    url: requestedUrl,
+    type,
+    textureUrl: searchParams.get('textureUrl') ?? searchParams.get('texture') ?? undefined,
+    normalUrl: searchParams.get('normalUrl') ?? searchParams.get('normal') ?? undefined
   };
+}
+
+function App() {
+  const model = getModelFromSearchParams();
 
   return (
     <main style={{ width: '100%', height: '100vh' }}>
       <ModelViewer 
         url={model.url} 
         type={model.type} 
-        textureUrl={'textureUrl' in model ? (model as { textureUrl?: string }).textureUrl : undefined}
-        normalUrl={'normalUrl' in model ? (model as { normalUrl?: string }).normalUrl : undefined}
+        textureUrl={model.textureUrl}
+        normalUrl={model.normalUrl}
       />
     </main>
   );

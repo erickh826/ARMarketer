@@ -11,7 +11,7 @@
 ## Current Stage
 
 - Phase: `Phase 1`
-- Status: `W3 in progress / Gate 3 Formalization`
+- Status: `W3 in progress / Gate 3 passed`
 
 ## Current Truths
 
@@ -19,8 +19,9 @@
 2. Viewer skeleton exists in `src/components/ModelViewer.tsx` and supports OBJ, FBX, and GLB.
 3. Optimized GLB is the primary pipeline output. Current test assets include `test-cube.glb` (tiny smoke asset), `low_poly_wood_crate.glb` (1.7MB), and `factory-lod0-opt.glb` (2.6MB optimized from 171MB).
 4. **Gate 2 Desktop Evidence Recorded:** Stress test with 100MB-class assets (e.g., `cyberpunk_city.glb`) completed on desktop; mobile validation is currently blocked.
-5. **R2 Decision:** Large source assets and pipeline outputs will be hosted on Cloudflare R2, not in Git.
-6. Prisma schema and backend services are functional (Project, MediaAsset, ImageTarget, ARExperience).
+5. **Gate 3 Passed:** `factory-lod0-opt.glb` has formal runtime and visual evidence, and the Docker-free `trimesh` + `gltf-transform` path is the current accepted Phase 1 pipeline.
+6. **R2 Decision:** Large source assets and pipeline outputs will be hosted on Cloudflare R2, not in Git.
+7. Prisma schema and backend services are functional (Project, MediaAsset, ImageTarget, ARExperience).
 
 ## Primary Planning Files
 
@@ -31,10 +32,10 @@
 
 ## Current Recommended Priority
 
-1. Execute Gate 3 formal verification (Visual smoke test + Lineage proof).
-2. Harden `convert_trimesh.py` and finalize the R2 storage contract.
+1. Implement the first real R2-aligned source -> derived `MediaAsset` lineage proof.
+2. Integrate existing backend services and example routes into a managed upload/pipeline flow.
 3. Re-attempt Gate 2 mobile validation once a remote debugging environment is available.
-4. Integrate existing backend services (Routes + Upload flow).
+4. Start the MindAR + React/R3F architecture task after the asset flow contract is stable.
 
 ## Collaboration Rules
 

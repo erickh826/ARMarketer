@@ -37,15 +37,17 @@
 
 - [x] Blender conversion pipeline skeleton exists
   - Evidence: `pipeline/run_convert.sh`, `pipeline/scripts/convert.py`
-- [-] Successful OBJ/FBX -> GLB example artifact recorded
-  - Evidence: `pipeline/output/20251228_004_RC_LOD0_opt.glb`, `public/test-assets/factory-lod0-opt.glb`, `docs/agents/suggestion/TASK-003-pipeline-suggestion-codex.md`
-- [-] Before/after size comparison recorded
-  - Evidence: `docs/agents/suggestion/TASK-003-pipeline-suggestion-codex.md`
-- [ ] Quality review notes recorded
+- [x] Successful OBJ/FBX -> GLB example artifact recorded
+  - Evidence: `pipeline/output/20251228_004_RC_LOD0_opt.glb`, `public/test-assets/factory-lod0-opt.glb`, `docs/session/2026-05-15-gate3-report.md`
+- [x] Before/after size comparison recorded
+  - Evidence: `docs/session/2026-05-15-gate3-preliminary-report.md`, `docs/session/2026-05-15-gate3-report.md`
+- [x] Quality review notes recorded
+  - Evidence: `docs/session/2026-05-15-gate3-evidence-note.md`
 - [x] `MediaAsset` lineage model exists
   - Evidence: `prisma/schema.prisma`, `MediaAssetService`
 - [ ] Derived asset flow tested end-to-end
-- [ ] Gate 3 result logged
+- [x] Gate 3 result logged
+  - Evidence: `docs/session/2026-05-15-gate3-report.md`
 
 ## W4 — Upload + Viewer Flow
 
@@ -101,5 +103,5 @@
 | :--- | :--- | :--- | :--- |
 | Gate 1 | MindAR stable on target phones | `evidence-missing` | POC exists, formal device validation missing |
 | Gate 2 | 100MB-class asset loadability proven | `desktop-evidence-recorded-mobile-blocked` | Desktop large-asset evidence exists, but the desktop report has an asset-name mismatch to correct and mobile validation is blocked until a real phone/device-debugging setup is available |
-| Gate 3 | Optimized GLB pipeline output accepted | `preliminary-evidence-recorded` | A real OBJ -> optimized GLB conversion exists and size comparison was recorded, but runtime viewer validation, quality review, lineage proof, and formal Gate 3 report are still missing |
+| Gate 3 | Optimized GLB pipeline output accepted | `PASSED` | Visual smoke test successful (2.62MB); Docker-free pipeline formalized; evidence recorded in docs/session/2026-05-15-gate3-evidence-note.md |
 | Gate 4 | 3 legacy cards rebuilt and accepted | `not-started` | Future milestone |
