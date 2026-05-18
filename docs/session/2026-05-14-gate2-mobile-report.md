@@ -21,7 +21,8 @@ Before re-executing this validation, the following must be in place:
 
 1. A target mobile device physically available and connected
 2. Remote debugging enabled (Chrome DevTools for Android / Safari Web Inspector for iOS)
-3. `src/App.tsx` pointed at `cyberpunk_city.glb` (~136 MB, not `low_poly_wood_crate.glb` which is 1.7 MB)
+3. Viewer opened with URL-based asset targeting pointed at `cyberpunk_city.glb` (~136 MB, not `low_poly_wood_crate.glb` which is 1.7 MB), for example:
+   - `?url=/test-assets/cyberpunk_city.glb&type=glb`
 4. Dev server accessible on local network (e.g., `npm run dev -- --host`)
 5. `/draco/` decoder files confirmed present in `public/`
 

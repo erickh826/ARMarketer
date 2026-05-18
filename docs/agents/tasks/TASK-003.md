@@ -23,6 +23,7 @@ Run the missing mobile-device validation for Gate 2 using the current large GLB 
   - `public/test-assets/low_poly_wood_crate.glb` = 1,695,752 bytes (~1.62 MB)
 - This conflicts with `docs/session/2026-05-14-gate2-report.md`, which currently names `low_poly_wood_crate.glb` as a 138 MB asset. The executor must record and correct this mismatch in the task result.
 - `src/components/ModelViewer.tsx` is already configured to use a local Draco decoder via `/draco/`.
+- `src/App.tsx` supports query-param asset targeting via `?url=...` / `?model=...` and optional `?type=glb`, so mobile validation does not require changing the default viewer asset.
 - This is a **main task**. Review and validation should reuse `Task ID = TASK-003` with different roles.
 
 ## Owned Files
@@ -41,7 +42,7 @@ Run the missing mobile-device validation for Gate 2 using the current large GLB 
 - `server/**`
 - `prisma/**`
 - `pipeline/**`
-- `src/**` unless a tiny path swap in `src/App.tsx` is strictly required to point at `cyberpunk_city.glb` for manual testing
+- `src/**` unless a viewer bug blocks URL-based asset targeting and a minimal fix is strictly required
 
 ## Inputs
 
@@ -80,6 +81,8 @@ Run the missing mobile-device validation for Gate 2 using the current large GLB 
 ## Validation
 
 - Use `public/test-assets/cyberpunk_city.glb` as the default Gate 2 mobile stress asset unless a different asset is explicitly justified.
+- Preferred invocation method is URL-based asset targeting, for example:
+  - `?url=/test-assets/cyberpunk_city.glb&type=glb`
 - Separate the mobile stress run from desktop evidence already captured.
 - At minimum, execute on one target mobile browser.
 - Preferred matrix:
@@ -100,4 +103,4 @@ Run the missing mobile-device validation for Gate 2 using the current large GLB 
 - Keep the result short and evidence-oriented.
 - Do not restate desktop results except where needed for comparison.
 - If mobile validation cannot be completed because the device or tooling is unavailable, record the exact blocker and do not overstate readiness.
-- If `src/App.tsx` is temporarily pointed at `cyberpunk_city.glb` for manual testing, record that change in the result and keep scope minimal.
+- If URL-based targeting fails and `src/App.tsx` must be touched for testing, record the exact reason and keep scope minimal.

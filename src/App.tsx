@@ -10,7 +10,7 @@ type ModelConfig = {
 };
 
 const DEFAULT_MODEL: ModelConfig = {
-  url: '/test-assets/factory-lod0-opt.glb',
+  url: '/test-assets/test-cube.glb',
   type: 'glb'
 };
 

@@ -43,6 +43,7 @@
   - FBX loader
   - GLB loader
   - manual cleanup / dispose flow
+- `App.tsx` supports query-param asset targeting for validation flows, so large-asset tests do not need a code-path swap for each asset.
 - Current blocker:
   - managed upload/publish integration is still missing even though the baseline GLB path is now validated.
 
