@@ -23,8 +23,8 @@
   - Evidence: `useGLTF` branch in `ModelViewer.tsx`, `public/test-assets/test-cube.glb`, `src/App.tsx`
 - [-] Gate 2 test plan / review / validation completed
   - Evidence: `docs/agents/results/TASK-002-gemini.md`, `docs/agents/reviews/TASK-002-review-cursor.md`, `docs/agents/results/TASK-002-validation-codex.md`
-- [-] 100MB+ stress test executed
-  - Evidence: `docs/session/2026-05-14-gate2-report.md` (desktop large-asset test recorded), `docs/session/2026-05-14-gate2-mobile-report.md` (mobile validation blocked)
+- [x] 100MB+ stress test executed
+  - Evidence: `docs/session/2026-05-14-gate2-report.md`, `docs/session/2026-05-14-gate2-mobile-report.md`
 - [x] Gate 2 report written
   - Evidence: `docs/session/2026-05-14-gate2-report.md`, `docs/session/2026-05-14-gate2-mobile-report.md`
 - [x] Prisma core schema drafted
@@ -45,7 +45,7 @@
   - Evidence: `docs/session/2026-05-15-gate3-evidence-note.md`
 - [x] `MediaAsset` lineage model exists
   - Evidence: `prisma/schema.prisma`, `MediaAssetService`
-- [ ] Derived asset flow tested end-to-end
+- [-] Derived asset flow tested end-to-end
 - [x] Gate 3 result logged
   - Evidence: `docs/session/2026-05-15-gate3-report.md`
 
@@ -102,6 +102,6 @@
 | Gate | Goal | Current Status | Notes |
 | :--- | :--- | :--- | :--- |
 | Gate 1 | MindAR stable on target phones | `evidence-missing` | POC exists, formal device validation missing |
-| Gate 2 | 100MB-class asset loadability proven | `desktop-evidence-recorded-mobile-blocked` | Desktop large-asset evidence exists, but the desktop report has an asset-name mismatch to correct and mobile validation is blocked until a real phone/device-debugging setup is available |
+| Gate 2 | 100MB-class asset loadability proven | `pass-with-warnings` | Desktop and mobile evidence now exist for `cyberpunk_city.glb`; iPhone 14 Safari and Pixel 6 Chrome completed load without crash/context loss, but observed load times were ~27-30s and no remote-debug trace was captured |
 | Gate 3 | Optimized GLB pipeline output accepted | `PASSED` | Visual smoke test successful (2.62MB); Docker-free pipeline formalized; evidence recorded in docs/session/2026-05-15-gate3-evidence-note.md |
 | Gate 4 | 3 legacy cards rebuilt and accepted | `not-started` | Future milestone |

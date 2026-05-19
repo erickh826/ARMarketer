@@ -23,3 +23,13 @@ export type UploadAssetRequest = {
   checksumSha256?: string
   metadata?: Prisma.InputJsonValue
 }
+
+export type RegisterDerivedAssetRequest = {
+  projectId: string
+  sourceAssetId: string
+  name: string
+  storageKey: string
+  processedUrl: string
+  fileSizeBytes?: number
+  metadata?: Prisma.InputJsonValue
+}

@@ -1,13 +1,13 @@
 # ARMarketer — Current Status
 
-> Last updated: 2026-05-15
+> Last updated: 2026-05-18
 > Scope: repo reality check against `system_plan.md` and `docs/plan/phase_plan/phase1.md`
 
 ## Current Stage
 
 - **Phase:** Phase 1
 - **Stage:** **W2 complete / W3 in progress**
-- **Summary:** W1 feasibility POC exists, W2 viewer skeleton exists, W3 pipeline evidence is now formally accepted for Gate 3, backend service skeleton exists, and the main open execution gaps are Gate 2 mobile validation plus backend upload/route integration.
+- **Summary:** W1 feasibility POC exists, Gate 2 now has real mobile evidence as `pass-with-warnings`, Gate 3 is formally accepted, and the main execution gap is now backend upload/route integration plus the first managed source -> derived asset proof.
 
 ## Progress Matrix
 
@@ -15,7 +15,7 @@
 | :--- | :--- | :--- | :--- | :--- |
 | MindAR image tracking feasibility POC | W1 | **Partial complete** | `public/poc.html` | Still A-Frame HTML POC; no formal multi-device test record; not yet integrated into React/R3F app |
 | Device validation for Gate 1 | W1 | **Not recorded** | No dedicated test report found | Need actual test matrix, phones, browser versions, pass/fail notes |
-| 100MB-class 3D viewer POC | W2 | **Partial complete** | `src/components/ModelViewer.tsx`; `docs/session/2026-05-14-gate2-report.md` | Desktop stress-test evidence exists; mobile validation still blocked |
+| 100MB-class 3D viewer POC | W2 | **Complete with warnings** | `src/components/ModelViewer.tsx`; `docs/session/2026-05-14-gate2-report.md`; `docs/session/2026-05-14-gate2-mobile-report.md` | Mobile loadability is now evidenced, but field-observed load times are ~27-30s and instrumentation is limited |
 | OBJ support | W2 | **Complete (POC level)** | `ModelViewer.tsx`, `public/concrete-rubble-scan/**` | Still needs large-file validation record |
 | FBX support | W2 | **Complete (POC level)** | `ModelViewer.tsx` uses `useFBX` | Needs actual high-size sample validation |
 | GLB support for W3 output | W3 | **Complete (current Phase 1 baseline)** | `ModelViewer.tsx`; `public/test-assets/factory-lod0-opt.glb`; `docs/session/2026-05-15-gate3-report.md` | Future work is managed-flow integration, not baseline viewer proof |
@@ -90,17 +90,18 @@
 
 ## Gate 2 — 100MB-class asset can be loaded and operated
 
-- **Status:** `DESKTOP EVIDENCE RECORDED / MOBILE BLOCKED`
+- **Status:** `PASS-WITH-WARNINGS`
 - **What exists:**
   - viewer skeleton
   - progress UI
   - dispose logic
   - OBJ/FBX/GLB support
   - desktop stress-test report using a 100MB-class asset
+  - mobile real-device evidence on iPhone 14 Safari and Pixel 6 Chrome
 - **What is missing:**
-  - target mobile-device execution
-  - mobile browser memory / stability evidence
-- **Decision:** desktop evidence is accepted, but Gate 2 is not fully passed until mobile validation exists
+  - remote-debug console and memory trace
+  - tighter timing separation between network and runtime cost
+- **Decision:** Gate 2 loadability is proven on desktop and mobile, but the mobile result carries performance/instrumentation warnings
 
 ## Gate 3 — pipeline can produce acceptable optimized GLB
 
@@ -134,4 +135,13 @@
 1. **GLB is now the accepted main output format for Phase 1.** Gate 3 baseline evidence is recorded and the Docker-free pipeline is the current official path on this machine.
 2. **Backend service work should now be described as hardening/integration, not starting from scratch.**
 3. **MindAR integration is now an architecture task, not just a POC cleanup.**
-4. **The main remaining proof gaps are mobile Gate 2 validation and managed source -> derived asset flow integration.**
+4. **The main remaining proof gaps are managed source -> derived asset flow integration plus better-instrumented mobile performance evidence if stricter Gate 2 closeout is needed.**
+
+## Follow-Up Order
+
+1. `TASK-006` — implement the first managed source -> derived `MediaAsset` lineage proof and R2-aligned contract shape.
+2. Follow-up 1 — re-run Gate 2 mobile validation with instrumentation:
+   - capture remote-debug console output
+   - capture memory observations if available
+   - separate network wait from decode/render time
+3. Continue broader route/upload integration after the lineage proof path is working.

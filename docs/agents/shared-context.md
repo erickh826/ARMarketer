@@ -18,7 +18,7 @@
 1. MindAR feasibility POC exists in `public/poc.html`, but formal Gate 1 evidence is still missing.
 2. Viewer skeleton exists in `src/components/ModelViewer.tsx` and supports OBJ, FBX, and GLB. `src/App.tsx` also supports query-param asset targeting for validation runs.
 3. Optimized GLB is the primary pipeline output. Current test assets include `test-cube.glb` (tiny smoke asset), `low_poly_wood_crate.glb` (1.7MB), and `factory-lod0-opt.glb` (2.6MB optimized from 171MB).
-4. **Gate 2 Desktop Evidence Recorded:** Stress test with 100MB-class assets (e.g., `cyberpunk_city.glb`) completed on desktop; mobile validation is currently blocked.
+4. **Gate 2 Pass-With-Warnings:** Stress test evidence now exists on desktop plus real-device mobile runs (iPhone 14 Safari, Pixel 6 Chrome) for `cyberpunk_city.glb`; no crash/context loss was observed, but mobile load times were roughly 27-30 seconds and instrumentation was limited.
 5. **Gate 3 Passed:** `factory-lod0-opt.glb` has formal runtime and visual evidence, and the Docker-free `trimesh` + `gltf-transform` path is the current accepted Phase 1 pipeline.
 6. **R2 Decision:** Large source assets and pipeline outputs will be hosted on Cloudflare R2, not in Git.
 7. Prisma schema and backend services are functional (Project, MediaAsset, ImageTarget, ARExperience).

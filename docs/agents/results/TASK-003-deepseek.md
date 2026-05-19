@@ -2,17 +2,20 @@
 
 ## 1. Summary
 
-- **Verdict: BLOCKED — mobile validation not executable**
-  Gate 2 mobile-device stress testing cannot be performed on this machine. No target phone (iPhone 12+/Android 12+) is connected or accessible, and no remote debugging (Chrome DevTools / Safari Web Inspector) is available. Per task instruction: "do not overstate readiness."
-- **Two repo-truth conflicts discovered**:
-  1. Gate 2 report (`docs/session/2026-05-14-gate2-report.md`) claims `low_poly_wood_crate.glb` is 138 MB, but the actual file is 1.7 MB. The real 137 MB asset is `cyberpunk_city.glb`.
-  2. `src/App.tsx` currently points at `factory-lod0-opt.glb` (~2.7 MB), not at the Gate 2 stress asset `cyberpunk_city.glb`. A path swap is needed before any Gate 2 mobile test.
+- **Verdict: pass-with-warnings**
+  Real-device mobile validation was later executed on **2026-05-18** using URL-based asset targeting against `cyberpunk_city.glb` (~136.36 MB).
+- Evidence recorded:
+  - iPhone 14 / iOS 26.4.2 / Safari: ~27s load, smooth interaction, no crash/context loss observed
+  - Pixel 6 / Android 14 / Chrome: ~30s load, usable but slightly slow interaction, no crash/context loss observed
+- Remaining caution:
+  - performance timing was field-observed and likely partially network-bound
+  - no remote-debug console capture or memory trace was recorded
 
 ## 2. Files Touched or Reviewed
 
-### Touched (created)
+### Touched (created/updated)
 - `docs/agents/results/TASK-003-codex.md` — this file
-- `docs/session/2026-05-14-gate2-mobile-report.md` — blocker report
+- `docs/session/2026-05-14-gate2-mobile-report.md` — updated with real-device evidence
 
 ### Reviewed (read-only)
 - `docs/agents/shared-context.md`
@@ -36,55 +39,31 @@
 
 ## 3. Findings
 
-### 3.1 Execution Blocker
+### 3.1 Real-device validation outcome
 
 | Item | Detail |
 |---|---|
-| Target devices | Not available — iPhone 12/13+ (Safari) and Android 12+ (Chrome) required |
-| Remote debugging | Not available — no USB-connected mobile device for Chrome DevTools or Safari Web Inspector |
-| Machine | Windows Desktop — no mobile emulation adequate for GPU/memory stress testing |
-| Workaround | None — mobile GPU memory limits, tab killer behavior, and WebGL context loss cannot be replicated on desktop |
-| Result | **BLOCKED** — Gate 2 mobile validation deferred |
+| Target devices | iPhone 14 (Safari), Pixel 6 (Chrome) |
+| Tested asset | `cyberpunk_city.glb` — 142,987,188 bytes (~136.36 MB) |
+| Invocation method | URL-based targeting via `?url=/test-assets/cyberpunk_city.glb&type=glb` |
+| Result | **PASS-WITH-WARNINGS** — completed on real devices without crash/context loss |
 
-### 3.2 Repo-Truth Conflicts Discovered
+### 3.2 Observed mobile evidence
 
-#### Conflict 1: Asset size mismatch in Gate 2 report
+| Device | OS | Browser | Load Time | Interaction | Crash / Context Loss |
+|---|---|---|---|---|---|
+| iPhone 14 | iOS 26.4.2 | Safari | ~27s | smooth | none observed |
+| Pixel 6 | Android 14 | Chrome | ~30s | usable but slightly slow | none observed |
 
-`docs/session/2026-05-14-gate2-report.md` lines 46-48 claim:
+The tester also noted that network conditions likely accounted for a meaningful portion of the measured wait time.
 
-```
-| Filename | `low_poly_wood_crate.glb` |
-| Size     | 138 MB                     |
-```
+### 3.3 Remaining evidence gaps
 
-Actual file sizes:
+- No console capture was recorded during the mobile run.
+- No memory observation or remote-debug trace was recorded.
+- Android performance is acceptable but somewhat degraded versus iPhone.
 
-| File | Stated size | Actual size | Mismatch |
-|---|---|---|---|
-| `low_poly_wood_crate.glb` | 138 MB | **1.7 MB** (1,695,752 bytes) | **~81× off** |
-| `cyberpunk_city.glb` | not mentioned | **137 MB** (142,987,188 bytes) | — |
-
-The real 137 MB asset is `cyberpunk_city.glb`, not `low_poly_wood_crate.glb`. The desktop Gate 2 pass was likely run against `cyberpunk_city.glb` but recorded under the wrong filename.
-
-**Recommendation**: Update `docs/session/2026-05-14-gate2-report.md` to reference the correct asset name and verify the reported metrics still apply.
-
-#### Conflict 2: App.tsx not pointed at the Gate 2 stress asset
-
-`src/App.tsx` line 16-19:
-
-```typescript
-// Tier 2 — factory LOD0 optimized (Draco+WebP, ~2.7 MB), TASK-003 pipeline evidence
-const model = {
-  url: "/test-assets/factory-lod0-opt.glb",
-  type: "glb" as const
-};
-```
-
-The active model is `factory-lod0-opt.glb` (2.7 MB), not `cyberpunk_city.glb` (137 MB). Before any Gate 2 mobile test, App.tsx must be pointed at the actual stress asset.
-
-**Recommendation**: Swap the active model to `cyberpunk_city.glb` before running any mobile validation.
-
-### 3.3 Reviewer/Validation References (from TASK-002)
+### 3.4 Reviewer/Validation References (from TASK-002)
 
 All four TASK-002 artifacts (implementer, reviewer, alternate implementer, validator) were consulted. Key consistent findings across all of them:
 
@@ -93,7 +72,7 @@ All four TASK-002 artifacts (implementer, reviewer, alternate implementer, valid
 - **TASK-002-gemini** noted the asset name ambiguity: "whether the actual asset tested was `cyberpunk_city.glb` instead of `low_poly_wood_crate.glb`" — this was prescient given Conflict 1 above.
 - **TASK-002-validation-codex** flagged that framing the mobile validation as a separate TASK-003 would be cleaner — which is exactly what this task is.
 
-### 3.4 Viewer Configuration Checks
+### 3.5 Viewer Configuration Checks
 
 Verified `ModelViewer.tsx`:
 - Draco decoder is **locally served** via `useGLTF.setDecoderPath('/draco/')` (line 9) — avoids CDN latency.
@@ -107,30 +86,15 @@ These are well-configured for mobile testing — no viewer changes needed before
 
 | Risk | Severity | Detail |
 |---|---|---|
-| Mobile validation not executed | **High** | Gate 2 remains `desktop-passed-mobile-pending`. Phase 1 targets mobile-first delivery; without mobile evidence, Gate 2 cannot close. |
-| Asset name mismatch in gate2 report | **Medium** | If a reviewer or downstream task relies on the filename `low_poly_wood_crate.glb` as the 138 MB asset, they will test the wrong file (1.7 MB). |
-| App.tsx pointing at wrong asset | **Low** | The current `factory-lod0-opt.glb` is 2.7 MB, which would produce a trivial pass that provides no meaningful Gate 2 evidence. |
-| Draco local path unverified | **Low** | `useGLTF.setDecoderPath('/draco/')` is set but the actual `/draco/` directory in `public/` was not checked — needs confirmation that decoder files are present. |
-| WebP texture support on mobile | **Low** | The active `factory-lod0-opt.glb` uses WebP textures. iOS Safari <14 does not support WebP; current Safari versions do. Should be verified for the target mobile matrix. |
+| High observed load time | **Medium** | ~27-30s field-observed wait time is acceptable for proof-of-loadability but still high for production expectations. |
+| Android interaction slightly degraded | **Low-Medium** | Pixel 6 remained usable, but not as smooth as iPhone 14. |
+| Missing remote-debug evidence | **Low-Medium** | No console or memory trace was captured, so this is not a fully instrumented run. |
 
 ## 5. Recommended Next Step
 
-1. **Fix the Gate 2 report asset reference** — update `docs/session/2026-05-14-gate2-report.md` to correct the filename from `low_poly_wood_crate.glb` to `cyberpunk_city.glb` and revalidate the 138 MB size claim against `cyberpunk_city.glb` (actual: ~136 MB). This should be the first action before any further Gate 2 work.
-
-2. **Prepare for mobile validation** — before handing this task to a human or device-capable agent:
-   - Point `src/App.tsx` at `cyberpunk_city.glb`
-   - Confirm `/draco/` decoder files exist in `public/`
-   - Ensure the dev server is accessible on the local network for mobile device connection
-
-3. **Execute the mobile test on a real device** — connect a target phone (iPhone 12+/Safari or Android 12+/Chrome), load the viewer, and record per the task validation checklist:
-   - load start → ready time
-   - orbit responsiveness
-   - smooth/degraded/unusable rating
-   - console errors (via remote debugging)
-   - WebGL context loss, tab kill, crash
-   - memory observation if available
-
-4. **After mobile validation**, update:
-   - `docs/session/2026-05-14-gate2-mobile-report.md` with test evidence
-   - `docs/plan/phase1-checklist.md` Gate 2 status (to `full-pass` or `fail`)
-   - This task result file with a follow-up note
+1. Update Gate 2 status docs from `mobile-blocked` to `mobile-evidence-recorded` or equivalent wording.
+2. Keep Gate 2 as **pass-with-warnings** unless a stronger instrumented run shows materially better or worse behavior.
+3. If a higher-confidence closeout is needed later, rerun on the same devices with remote debugging enabled to capture:
+   - console output
+   - memory observations
+   - clearer separation between network wait and decode/render time
