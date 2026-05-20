@@ -1,6 +1,6 @@
 # Phase 1 Checklist
 
-> Last updated: 2026-05-15
+> Last updated: 2026-05-20
 > Status legend: `[x] done` / `[-] partial` / `[ ] not started`
 
 ## W1 — Feasibility
@@ -45,19 +45,23 @@
   - Evidence: `docs/session/2026-05-15-gate3-evidence-note.md`
 - [x] `MediaAsset` lineage model exists
   - Evidence: `prisma/schema.prisma`, `MediaAssetService`
-- [-] Derived asset flow tested end-to-end
+- [x] Derived asset flow tested end-to-end
+  - Evidence: `server/examples/next-app-router/app/api/assets/derived/route.ts`, smoke test 2026-05-20 confirmed source→derived lineage via express host
 - [x] Gate 3 result logged
   - Evidence: `docs/session/2026-05-15-gate3-report.md`
 
 ## W4 — Upload + Viewer Flow
 
-- [-] Upload authorization example route exists
+- [x] Upload authorization example route exists
   - Evidence: `server/examples/next-app-router/app/api/assets/upload/route.ts`
-- [-] Local upload example route exists
+- [x] Local upload example route exists
   - Evidence: `server/examples/next-app-router/app/uploads/[...path]/route.ts`
-- [ ] Example routes integrated into a real app host
-- [ ] Upload smoke test passed on actual host
-- [ ] Viewer can load asset published through the managed flow
+- [x] Example routes integrated into a real app host
+  - Evidence: `server/examples/express-host/index.js`, TASK-007 verified 2026-05-19
+- [x] Upload smoke test passed on actual host
+  - Evidence: 2026-05-20 session — POST upload (201) → PUT binary (204) → POST derived (201) with lineage → GET experience (200); all routes verified against `localhost:3001` with project `001/smoke-test`
+- [x] Viewer can load asset published through the managed flow
+  - Evidence: 2026-05-20 — viewer loaded `factory-lod0-opt.glb` via `?url=http://localhost:3001/uploads/optimized/001/...` — CORS-enabled express host confirmed
 
 ## W5 — Target / Editor Management
 

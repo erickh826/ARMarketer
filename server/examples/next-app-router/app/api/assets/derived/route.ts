@@ -2,7 +2,7 @@ import { mediaAssetService, storageService, type RegisterDerivedAssetRequest } f
 import { toJsonSafe } from '../../../../../../lib/json.js'
 
 const MAX_UPLOAD_BYTES = 500 * 1024 * 1024
-const DERIVED_STORAGE_PROVIDER = storageService.provider === 'LOCAL' ? 'LOCAL' : 'R2'
+const DERIVED_STORAGE_PROVIDER = storageService.provider === 'R2' ? 'R2' : 'LOCAL'
 
 export async function POST(request: Request) {
   const body = await request.json() as RegisterDerivedAssetRequest
