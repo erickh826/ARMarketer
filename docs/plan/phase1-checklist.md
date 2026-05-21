@@ -7,9 +7,11 @@
 
 - [-] MindAR POC created
   - Evidence: `public/poc.html`
-- [ ] Multi-device test matrix recorded
+- [-] Multi-device test matrix recorded
+  - Evidence: `docs/session/2026-05-21-gate1-test-protocol.md` (protocol defined, device run pending)
 - [ ] Gate 1 result logged with pass/fail decision
-- [ ] Fallback trigger defined if MindAR stability is insufficient
+- [x] Fallback trigger defined if MindAR stability is insufficient
+  - Evidence: `docs/session/2026-05-21-gate1-test-protocol.md` Section 5
 
 ## W2 — Viewer + Core Schema
 
@@ -31,7 +33,8 @@
   - Evidence: `prisma/schema.prisma`
 - [x] Server typecheck bootstrap fixed
   - Evidence: `package.json` now runs `prisma generate` before `typecheck:server`
-- [ ] Auth strategy implemented
+- [x] Auth strategy implemented
+  - Evidence: `prisma/schema.prisma` Project.apiKey (nullable unique), `server/examples/next-app-router/lib/api-key-auth.ts`, upload and derived routes protected; projects without an apiKey remain open (backward compatible)
 
 ## W3 — Pipeline + Data Linkage
 

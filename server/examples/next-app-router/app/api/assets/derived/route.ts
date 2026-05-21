@@ -1,5 +1,6 @@
 import { mediaAssetService, storageService, type RegisterDerivedAssetRequest } from '../../../../lib/services.js'
 import { toJsonSafe } from '../../../../../../lib/json.js'
+import { requireApiKey } from '../../../../lib/api-key-auth.js'
 
 const MAX_UPLOAD_BYTES = 500 * 1024 * 1024
 const DERIVED_STORAGE_PROVIDER = storageService.provider === 'R2' ? 'R2' : 'LOCAL'
@@ -13,6 +14,9 @@ export async function POST(request: Request) {
       { status: 400 },
     )
   }
+
+  const authError = await requireApiKey(request, body.projectId)
+  if (authError) return authError
 
   if (
     body.fileSizeBytes !== undefined
