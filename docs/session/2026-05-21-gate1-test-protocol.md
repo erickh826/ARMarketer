@@ -1,7 +1,7 @@
 # Gate 1 Test Protocol — MindAR Image Tracking Stability
 
 > Date: 2026-05-21
-> Status: IN PROGRESS — fill in Section 3 results during device run
+> Status: COMPLETE — Gate 1 PASSED 2026-05-21
 
 ## 1. Objective
 
@@ -53,9 +53,8 @@ Fill in each row during the device run. Rate tracking stability as:
 
 | # | Device | OS Version | Browser | Camera opens? | Target detected? | Detection latency (s) | Tracking quality | Stable ≥10s? | Crash? | Notes |
 |---|--------|------------|---------|:---:|:---:|:---:|---|:---:|:---:|-------|
-| 1 | | | Safari | | | | | | | |
-| 2 | | | Chrome | | | | | | | |
-| 3 | | | | | | | | | | |
+| 1 | iOS device | iOS | Safari | Yes | Yes | <8s | Stable | Yes | No | Smooth overlay on card |
+| 2 | Android device | Android | Chrome | Yes | Yes | <8s | Stable | Yes | No | Smooth overlay on card |
 
 ---
 
@@ -70,7 +69,7 @@ All of the following must be true for Gate 1 to pass:
 - [ ] Tracking rated **Stable** or better on both primary devices
 - [ ] No crash or hard browser freeze on either primary device
 
-**Result: PASS / FAIL / PASS-WITH-WARNINGS** ← fill in after run
+**Result: PASS** — confirmed 2026-05-21
 
 ### Pass-with-warnings
 Same as pass but with one or more of:
@@ -97,10 +96,10 @@ If Gate 1 fails, the fallback decision is triggered by any of:
 
 > Fill in after completing Section 3.
 
-- **Result:** _(PASS / FAIL / PASS-WITH-WARNINGS)_
-- **Primary iOS device:**
-- **Primary Android device:**
-- **Notable issues:**
-- **Fallback triggered?** _(yes / no)_
+- **Result:** PASS
+- **Primary iOS device:** iOS Safari — target detected, smooth stable overlay
+- **Primary Android device:** Android Chrome — target detected, smooth stable overlay
+- **Notable issues:** LAN access required localtunnel (Windows firewall blocked direct LAN); no tracking or rendering issues
+- **Fallback triggered?** No
 
 Update `docs/plan/phase1-checklist.md` Gate Result Log once complete.

@@ -1,15 +1,16 @@
 # Phase 1 Checklist
 
-> Last updated: 2026-05-20
+> Last updated: 2026-05-21
 > Status legend: `[x] done` / `[-] partial` / `[ ] not started`
 
 ## W1 — Feasibility
 
-- [-] MindAR POC created
+- [x] MindAR POC created
   - Evidence: `public/poc.html`
-- [-] Multi-device test matrix recorded
-  - Evidence: `docs/session/2026-05-21-gate1-test-protocol.md` (protocol defined, device run pending)
-- [ ] Gate 1 result logged with pass/fail decision
+- [x] Multi-device test matrix recorded
+  - Evidence: `docs/session/2026-05-21-gate1-test-protocol.md` Section 3 — iOS Safari + Android Chrome both PASS
+- [x] Gate 1 result logged with pass/fail decision
+  - Evidence: `docs/session/2026-05-21-gate1-test-protocol.md` Section 6 — PASS 2026-05-21
 - [x] Fallback trigger defined if MindAR stability is insufficient
   - Evidence: `docs/session/2026-05-21-gate1-test-protocol.md` Section 5
 
@@ -108,7 +109,7 @@
 
 | Gate | Goal | Current Status | Notes |
 | :--- | :--- | :--- | :--- |
-| Gate 1 | MindAR stable on target phones | `evidence-missing` | POC exists, formal device validation missing |
+| Gate 1 | MindAR stable on target phones | `PASSED` | iOS Safari + Android Chrome — smooth stable tracking, no crash, detection <8s. Tested 2026-05-21 via localtunnel. Evidence: `docs/session/2026-05-21-gate1-test-protocol.md` |
 | Gate 2 | 100MB-class asset loadability proven | `pass-with-warnings` | Desktop and mobile evidence now exist for `cyberpunk_city.glb`; iPhone 14 Safari and Pixel 6 Chrome completed load without crash/context loss, but observed load times were ~27-30s and no remote-debug trace was captured |
 | Gate 3 | Optimized GLB pipeline output accepted | `PASSED` | Visual smoke test successful (2.62MB); Docker-free pipeline formalized; evidence recorded in docs/session/2026-05-15-gate3-evidence-note.md |
 | Gate 4 | 3 legacy cards rebuilt and accepted | `not-started` | Future milestone |
