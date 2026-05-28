@@ -69,7 +69,9 @@
 
 ## W5 — Target / Editor Management
 
-- [ ] ImageTarget management API/UI
+- [x] ImageTarget management API routes
+  - Evidence: `server/examples/next-app-router/app/api/targets/route.ts` (POST create, GET list), `app/api/targets/[id]/route.ts` (GET, PATCH, DELETE), `app/api/targets/[id]/compile/route.ts` (POST compile stub); all wired into `server/examples/express-host/index.js`; typecheck passes 2026-05-27
+- [ ] ImageTarget management API smoke test
 - [ ] Dedicated target-experience binding workflow
 - [ ] Hotspot editor UI initial version
 

@@ -106,6 +106,14 @@ function projectSlugContext(req) {
   }
 }
 
+function targetIdContext(req) {
+  return {
+    params: Promise.resolve({
+      id: req.params.id,
+    }),
+  }
+}
+
 async function bootstrap() {
   const port = getPort()
   ensureLocalStorageDefaults(port)
@@ -115,11 +123,17 @@ async function bootstrap() {
     { POST: registerDerivedAssetPost },
     { GET: getUploadObject, PUT: putUploadObject },
     { GET: getProjectExperience },
+    { POST: createTarget, GET: listTargets },
+    { GET: getTarget, PATCH: updateTarget, DELETE: deleteTarget },
+    { POST: compileTarget },
   ] = await Promise.all([
     import('../next-app-router/app/api/assets/upload/route.ts'),
     import('../next-app-router/app/api/assets/derived/route.ts'),
     import('../next-app-router/app/uploads/[...path]/route.ts'),
     import('../next-app-router/app/api/projects/[slug]/experience/route.ts'),
+    import('../next-app-router/app/api/targets/route.ts'),
+    import('../next-app-router/app/api/targets/[id]/route.ts'),
+    import('../next-app-router/app/api/targets/[id]/compile/route.ts'),
   ])
 
   const app = express()
@@ -128,8 +142,8 @@ async function bootstrap() {
 
   app.use((_req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*')
-    res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, OPTIONS')
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
+    res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, PATCH, DELETE, OPTIONS')
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, x-api-key')
     if (_req.method === 'OPTIONS') { res.sendStatus(204); return }
     next()
   })
@@ -163,6 +177,36 @@ async function bootstrap() {
 
   app.get('/api/projects/:slug/experience', asyncRoute(async (req, res) => {
     const response = await getProjectExperience(createRequest(req), projectSlugContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.post('/api/targets', express.json({ limit: '1mb' }), asyncRoute(async (req, res) => {
+    const response = await createTarget(createRequest(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.get('/api/targets', asyncRoute(async (req, res) => {
+    const response = await listTargets(createRequest(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.get('/api/targets/:id', asyncRoute(async (req, res) => {
+    const response = await getTarget(createRequest(req), targetIdContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.patch('/api/targets/:id', express.json({ limit: '1mb' }), asyncRoute(async (req, res) => {
+    const response = await updateTarget(createRequest(req), targetIdContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.delete('/api/targets/:id', asyncRoute(async (req, res) => {
+    const response = await deleteTarget(createRequest(req), targetIdContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.post('/api/targets/:id/compile', express.json({ limit: '1mb' }), asyncRoute(async (req, res) => {
+    const response = await compileTarget(createRequest(req), targetIdContext(req))
     await sendFetchResponse(response, res)
   }))
 
