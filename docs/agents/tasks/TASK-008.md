@@ -5,7 +5,8 @@
 - Task ID: `TASK-008`
 - Default role: `implementer`
 - Suggested first agent: `copilot`
-- Status: `done`
+- Status: `completed`
+- Verified: `2026-06-04` by `gemini` (runtime smoke test PASS)
 - Priority: `high`
 
 ## Objective

@@ -71,7 +71,8 @@
 
 - [x] ImageTarget management API routes
   - Evidence: `server/examples/next-app-router/app/api/targets/route.ts` (POST create, GET list), `app/api/targets/[id]/route.ts` (GET, PATCH, DELETE), `app/api/targets/[id]/compile/route.ts` (POST compile stub); all wired into `server/examples/express-host/index.js`; typecheck passes 2026-05-27
-- [ ] ImageTarget management API smoke test
+- [x] ImageTarget management API smoke test
+  - Evidence: Verified 2026-06-04 via real CRUD cycle against localhost:3001 (POST, GET, PATCH, DELETE all PASSED)
 - [ ] Dedicated target-experience binding workflow
 - [ ] Hotspot editor UI initial version
 
