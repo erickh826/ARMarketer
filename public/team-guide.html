@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARMarketer Team Guide</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9fafb;
+        }
+        h1, h2, h3 {
+            color: #111827;
+        }
+        h1 {
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 10px;
+        }
+        h2 {
+            margin-top: 30px;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 5px;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .flow-diagram {
+            background: #1f2937;
+            color: #f3f4f6;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        code {
+            background: #e5e7eb;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .highlight {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        ul {
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>ARMarketer: Teammate Visual Guide</h1>
+    <p>Welcome to the ARMarketer project! This guide will get you oriented quickly.</p>
+
+    <div class="card">
+        <h2>1. Project Overview</h2>
+        <p><strong>ARMarketer</strong> is a Web AR/VR/3D marketing platform designed to replace Zapworks-dependent delivery. It allows users to upload 3D models, associate them with image targets, and view them in a web-based AR experience.</p>
+    </div>
+
+    <div class="card">
+        <h2>2. Current Status & Gates</h2>
+        <p>We are currently in <strong>Phase 1 (W5 in progress)</strong>.</p>
+        <ul>
+            <li><strong>Gate 1 (PASSED):</strong> MindAR 1.2.5 stable on iOS Safari & Android Chrome.</li>
+            <li><strong>Gate 2 (PASS-WITH-WARNINGS):</strong> 100MB-class assets load successfully, but with ~30s load times.</li>
+            <li><strong>Gate 3 (PASSED):</strong> Optimized GLB pipeline via Docker-free trimesh + gltf-transform.</li>
+            <li><strong>Gate 4 (NOT STARTED):</strong> 3 legacy cards rebuilt (Planned for W9).</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>3. System Architecture & Flow</h2>
+        <p>The backend operates via a simple Next.js API integrated with an Express host for running locally.</p>
+        
+        <h3>Backend Data Flow</h3>
+        <div class="flow-diagram">
+Project (Top level namespace with API Key)
+  │
+  ├── MediaAsset (3D models, audio, etc.)
+  │    └── sourceAssetId tracks conversion lineage (e.g. OBJ -> optimized GLB)
+  │
+  ├── ImageTarget (The visual marker for AR tracking)
+  │    └── boundExperienceId (1:1 with an ARExperience)
+  │
+  └── ARExperience (The AR scene definition)
+       ├── imageTargetId (Many:1 to ImageTarget)
+       └── mediaAssetId (The asset to display)
+        </div>
+
+        <h3>Asset Upload & Viewer Flow</h3>
+        <ol>
+            <li><strong>Upload:</strong> <code>POST /api/assets/upload</code> -> Client uploads original source file (e.g., OBJ).</li>
+            <li><strong>Pipeline:</strong> Python scripts (<code>trimesh</code> + <code>gltf-transform</code>) convert OBJ to optimized GLB.</li>
+            <li><strong>Derived Asset:</strong> <code>POST /api/assets/derived</code> registers the optimized GLB with lineage back to the original.</li>
+            <li><strong>Viewer:</strong> <code>src/components/ModelViewer.tsx</code> loads the model using <code>useGLTF</code> or <code>OBJLoader</code>.</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h2>4. Task Roadmap & Priorities</h2>
+        <div class="highlight">
+            <strong>Current Priority (W5 & W6):</strong>
+            <ul>
+                <li><strong>W5 Completed:</strong> Target-experience binding routes are done (TASK-009).</li>
+                <li><strong>W5 Next:</strong> Hotspot editor UI initial version.</li>
+                <li><strong>W6:</strong> MindAR + React/R3F integration spike (embedding tracking in React).</li>
+                <li><strong>W6:</strong> Viewer reads CMS data (<code>GET /api/projects/:slug/experience</code> drives the viewer instead of query parameters).</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>5. Onboarding: Read These Files First</h2>
+        <p>Before writing code, familiarize yourself with these key documents:</p>
+        <ul>
+            <li><code>docs/agents/MANUAL.md</code> - Explains our file-based multi-agent workflow.</li>
+            <li><code>docs/agents/shared-context.md</code> - The absolute source of truth for current project state.</li>
+            <li><code>docs/plan/current-status.md</code> - Workstream status and gate logging.</li>
+            <li><code>prisma/schema.prisma</code> - The database schema and core data model.</li>
+            <li><code>server/examples/express-host/index.js</code> - The runnable backend host that mounts our API routes.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>6. How to Run Locally</h2>
+        <p>To run the application and backend on your local machine:</p>
+        <ul>
+            <li><strong>Start the backend:</strong> <code>npm run dev:example-host</code> (runs Express server on port 3001)</li>
+            <li><strong>Start the frontend:</strong> <code>npm run dev</code> (starts Vite/React dev server)</li>
+            <li><strong>Typecheck server:</strong> <code>npm run typecheck:server</code></li>
+            <li><strong>Database:</strong> Ensure PostgreSQL is running at <code>localhost:5432/armarketer</code> (configured via <code>.env</code>).</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>7. Key Risks & Known Limitations</h2>
+        <ul>
+            <li><strong>Large Asset Loading:</strong> Loading 100MB+ models works, but can take ~30 seconds on mobile.</li>
+            <li><strong>MindAR Version:</strong> Locked at <strong>1.2.5</strong>. Do NOT upgrade without running the Gate 1 test protocol again.</li>
+            <li><strong>Storage Provider:</strong> R2 credentials are for deployment. Local development defaults to <code>LOCAL</code> storage.</li>
+        </ul>
+    </div>
+
+    <div class="card">
+        <h2>8. Next Recommended Task</h2>
+        <p>With TASK-009 (Target-Experience Binding) completed, the next recommended step is:</p>
+        <p><strong>Hotspot editor UI initial version</strong> (W5) or <strong>MindAR + React/R3F integration spike</strong> (W6).</p>
+    </div>
+
+</body>
+</html>

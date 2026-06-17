@@ -1,6 +1,6 @@
 # Phase 1 Checklist
 
-> Last updated: 2026-05-21
+> Last updated: 2026-06-12
 > Status legend: `[x] done` / `[-] partial` / `[ ] not started`
 
 ## W1 — Feasibility
@@ -73,8 +73,12 @@
   - Evidence: `server/examples/next-app-router/app/api/targets/route.ts` (POST create, GET list), `app/api/targets/[id]/route.ts` (GET, PATCH, DELETE), `app/api/targets/[id]/compile/route.ts` (POST compile stub); all wired into `server/examples/express-host/index.js`; typecheck passes 2026-05-27
 - [x] ImageTarget management API smoke test
   - Evidence: Verified 2026-06-04 via real CRUD cycle against localhost:3001 (POST, GET, PATCH, DELETE all PASSED)
-- [ ] Dedicated target-experience binding workflow
+- [x] Target-experience binding API routes
+  - TASK-009: Create ARExperience CRUD routes + bind/unbind endpoints
+  - Required output: 7 routes mounted (POST/GET /api/experiences, GET/PATCH/DELETE /api/experiences/:id, POST/DELETE /api/targets/:id/bind)
+  - Planning: `docs/plan/TASK-009-plan.md`
 - [ ] Hotspot editor UI initial version
+  - Depends on TASK-009 completion
 
 ## W6 — AR Experience Read Path
 

@@ -114,6 +114,23 @@ function targetIdContext(req) {
   }
 }
 
+function experienceIdContext(req) {
+  return {
+    params: Promise.resolve({
+      id: req.params.id,
+    }),
+  }
+}
+
+function targetBindContext(req) {
+  return {
+    params: Promise.resolve({
+      id: req.params.id,
+      experienceId: req.params.experienceId,
+    }),
+  }
+}
+
 async function bootstrap() {
   const port = getPort()
   ensureLocalStorageDefaults(port)
@@ -126,6 +143,9 @@ async function bootstrap() {
     { POST: createTarget, GET: listTargets },
     { GET: getTarget, PATCH: updateTarget, DELETE: deleteTarget },
     { POST: compileTarget },
+    { POST: createExperience, GET: listExperiences },
+    { GET: getExperience, PATCH: updateExperience, DELETE: deleteExperience },
+    { POST: bindTarget, DELETE: unbindTarget },
   ] = await Promise.all([
     import('../next-app-router/app/api/assets/upload/route.ts'),
     import('../next-app-router/app/api/assets/derived/route.ts'),
@@ -134,6 +154,9 @@ async function bootstrap() {
     import('../next-app-router/app/api/targets/route.ts'),
     import('../next-app-router/app/api/targets/[id]/route.ts'),
     import('../next-app-router/app/api/targets/[id]/compile/route.ts'),
+    import('../next-app-router/app/api/experiences/route.ts'),
+    import('../next-app-router/app/api/experiences/[id]/route.ts'),
+    import('../next-app-router/app/api/targets/[id]/bind/route.ts'),
   ])
 
   const app = express()
@@ -207,6 +230,41 @@ async function bootstrap() {
 
   app.post('/api/targets/:id/compile', express.json({ limit: '1mb' }), asyncRoute(async (req, res) => {
     const response = await compileTarget(createRequest(req), targetIdContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.post('/api/experiences', express.json({ limit: '1mb' }), asyncRoute(async (req, res) => {
+    const response = await createExperience(createRequest(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.get('/api/experiences', asyncRoute(async (req, res) => {
+    const response = await listExperiences(createRequest(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.get('/api/experiences/:id', asyncRoute(async (req, res) => {
+    const response = await getExperience(createRequest(req), experienceIdContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.patch('/api/experiences/:id', express.json({ limit: '1mb' }), asyncRoute(async (req, res) => {
+    const response = await updateExperience(createRequest(req), experienceIdContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.delete('/api/experiences/:id', asyncRoute(async (req, res) => {
+    const response = await deleteExperience(createRequest(req), experienceIdContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.post('/api/targets/:id/bind/:experienceId', asyncRoute(async (req, res) => {
+    const response = await bindTarget(createRequest(req), targetBindContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.delete('/api/targets/:id/bind', asyncRoute(async (req, res) => {
+    const response = await unbindTarget(createRequest(req), targetIdContext(req))
     await sendFetchResponse(response, res)
   }))
 

@@ -1,7 +1,7 @@
 # ARMarketer — Current Status
 
-> Last updated: 2026-05-22
-> Stage: **W4 complete / W5 in progress**
+> Last updated: 2026-06-12
+> Stage: **W5 in progress**
 
 ## Gate Summary
 
@@ -32,8 +32,8 @@
 
 | Area | Status | Planned |
 | :--- | :--- | :--- |
-| ImageTarget management API | Not started | CRUD + source image upload + `.mind` compile stub |
-| Target-experience binding | Not started | `ARExperience.imageTargetId` + `ImageTarget.boundExperienceId` wiring |
+| ImageTarget management API | Complete | CRUD + source image upload + `.mind` compile stub routes + smoke test passed |
+| Target-experience binding | Complete | `ARExperience.imageTargetId` + `ImageTarget.boundExperienceId` wiring |
 | MindAR + React/R3F integration | Not started | Embed tracking in React app, replace A-Frame POC |
 | Viewer reads CMS data | Not started | `GET /api/projects/:slug/experience` drives the viewer |
 | Hotspot editor UI | Not started | W5 follow-up |

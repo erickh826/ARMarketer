@@ -1,6 +1,6 @@
 # Shared Context
 
-> Last updated: 2026-05-22
+> Last updated: 2026-06-12
 > This file is the shared source of truth for external CLI agents working on this repo.
 
 ## Repo
@@ -11,7 +11,7 @@
 ## Current Stage
 
 - Phase: `Phase 1`
-- Status: `W4 complete / W5 starting`
+- Status: `W5 in progress`
 
 ## Current Truths
 
@@ -23,18 +23,19 @@
 6. **R2 Decision:** Large source assets and pipeline outputs will be hosted on Cloudflare R2, not in Git.
 7. **Service layer is complete:** `Project`, `MediaAsset`, `ImageTarget`, `ARExperience` services all exist and are tested. Prisma schema has `apiKey` on Project.
 8. **Viewer skeleton** in `src/components/ModelViewer.tsx` supports OBJ, FBX, GLB. `src/App.tsx` supports `?url=` query-param targeting for local validation.
+9. **W5 ImageTarget API baseline is complete:** `POST/GET /api/targets`, `GET/PATCH/DELETE /api/targets/:id`, and `POST /api/targets/:id/compile` are implemented and mounted; checklist records smoke test pass on 2026-06-04.
 
 ## Primary Planning Files
 
-- `docs/plan/phase1-checklist.md` — authoritative W1–W10 checklist (W1–W4 all `[x]`)
+- `docs/plan/phase1-checklist.md` — authoritative W1–W10 checklist (W1–W4 all `[x]`, W5 partially complete)
 - `docs/plan/current-status.md` — workstream status and gate log
 - `docs/plan/architecture.md` — stack and data model reference
 - `docs/plan/pipeline-asset-flow.md` — pipeline data-flow diagram
 
 ## Current Recommended Priority
 
-1. **W5 — ImageTarget management API:** Create/update/delete ImageTarget records; upload source image; trigger `.mind` compilation (stub for Phase 1).
-2. **W5 — Target-experience binding:** Associate an `ARExperience` to an `ImageTarget` via `boundExperienceId`.
+1. **W5 — Target-experience binding:** Associate an `ARExperience` to an `ImageTarget` via `boundExperienceId`.
+2. **W5 — Hotspot editor UI initial version:** Start editor surface after target binding baseline exists.
 3. **W6 — MindAR + React/R3F integration spike:** Embed MindAR in the React app (not just A-Frame POC) using the confirmed tracking library.
 4. **W6 — Viewer reads CMS-backed experience:** `GET /api/projects/:slug/experience` drives the viewer instead of query-param assets.
 
