@@ -145,7 +145,75 @@ Project (Top level namespace with API Key)
     </div>
 
     <div class="card">
-        <h2>7. Key Risks & Known Limitations</h2>
+        <h2>7. TASK-009 API Workflow — ARExperience CRUD & Binding</h2>
+        <p>All endpoints below require the <code>x-api-key</code> header matching the project's API key. The backend runs on <code>http://localhost:3001</code> via <code>npm run dev:example-host</code>.</p>
+
+        <h3>Create an Experience</h3>
+        <div class="flow-diagram">POST /api/experiences
+curl -s -X POST http://localhost:3001/api/experiences \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: &lt;PROJECT_API_KEY&gt;" \
+  -d '{
+    "projectId": "&lt;PROJECT_ID&gt;",
+    "name": "My AR Scene",
+    "contentType": "MODEL_3D",
+    "mediaAssetId": "&lt;ASSET_ID&gt;"
+  }'
+# Returns 201 with the created ARExperience object.
+# Required: projectId, name, contentType. Returns 400 if any are missing.
+# Returns 422 if a constraint is violated (e.g. duplicate name).</div>
+
+        <h3>List Experiences for a Project</h3>
+        <div class="flow-diagram">GET /api/experiences?projectId=&lt;PROJECT_ID&gt;
+curl -s "http://localhost:3001/api/experiences?projectId=&lt;PROJECT_ID&gt;" \
+  -H "x-api-key: &lt;PROJECT_API_KEY&gt;"
+# Returns 200 with an array of ARExperience objects.
+# Returns 400 if projectId query param is missing.</div>
+
+        <h3>Get a Single Experience</h3>
+        <div class="flow-diagram">GET /api/experiences/:id
+curl -s http://localhost:3001/api/experiences/&lt;EXPERIENCE_ID&gt; \
+  -H "x-api-key: &lt;PROJECT_API_KEY&gt;"
+# Returns 200 with the ARExperience object.
+# Returns 404 if not found.</div>
+
+        <h3>Update an Experience</h3>
+        <div class="flow-diagram">PATCH /api/experiences/:id
+curl -s -X PATCH http://localhost:3001/api/experiences/&lt;EXPERIENCE_ID&gt; \
+  -H "Content-Type: application/json" \
+  -H "x-api-key: &lt;PROJECT_API_KEY&gt;" \
+  -d '{"name": "Updated Name", "imageTargetId": "&lt;TARGET_ID&gt;"}'
+# Returns 200 with updated object.
+# Returns 422 if imageTargetId does not belong to the same project.</div>
+
+        <h3>Delete an Experience</h3>
+        <div class="flow-diagram">DELETE /api/experiences/:id
+curl -s -X DELETE http://localhost:3001/api/experiences/&lt;EXPERIENCE_ID&gt; \
+  -H "x-api-key: &lt;PROJECT_API_KEY&gt;"
+# Returns 204 No Content on success.
+# Returns 404 if not found.</div>
+
+        <h3>Bind an Experience to an ImageTarget</h3>
+        <div class="flow-diagram">POST /api/targets/:id/bind/:experienceId
+curl -s -X POST \
+  "http://localhost:3001/api/targets/&lt;TARGET_ID&gt;/bind/&lt;EXPERIENCE_ID&gt;" \
+  -H "x-api-key: &lt;PROJECT_API_KEY&gt;"
+# Returns 200 with the updated ImageTarget (boundExperienceId set).
+# Pre-conditions:
+#   - Experience and target must belong to the same project.
+#   - experience.imageTargetId must already be set to this target's id.
+# Returns 422 if either condition is not met.</div>
+
+        <h3>Unbind an Experience from an ImageTarget</h3>
+        <div class="flow-diagram">DELETE /api/targets/:id/bind
+curl -s -X DELETE \
+  "http://localhost:3001/api/targets/&lt;TARGET_ID&gt;/bind" \
+  -H "x-api-key: &lt;PROJECT_API_KEY&gt;"
+# Returns 204 No Content. Sets target.boundExperienceId to null.</div>
+    </div>
+
+    <div class="card">
+        <h2>8. Key Risks & Known Limitations</h2>
         <ul>
             <li><strong>Large Asset Loading:</strong> Loading 100MB+ models works, but can take ~30 seconds on mobile.</li>
             <li><strong>MindAR Version:</strong> Locked at <strong>1.2.5</strong>. Do NOT upgrade without running the Gate 1 test protocol again.</li>
@@ -154,7 +222,29 @@ Project (Top level namespace with API Key)
     </div>
 
     <div class="card">
-        <h2>8. Next Recommended Task</h2>
+        <h2>9. Troubleshooting</h2>
+        <h3>401 Unauthorized on API calls</h3>
+        <p>The <code>x-api-key</code> header is missing or wrong. Retrieve the project's <code>apiKey</code> from the database: <code>SELECT "apiKey" FROM "Project" WHERE id = '&lt;id&gt;';</code>. Projects without an API key are open (no header needed).</p>
+
+        <h3>422 on POST /api/targets/:id/bind/:experienceId</h3>
+        <p>Two common causes: (1) the experience's <code>imageTargetId</code> is not set to the target you are binding to — PATCH the experience first; (2) the experience and target belong to different projects.</p>
+
+        <h3>Backend fails to start</h3>
+        <ul>
+            <li>Check PostgreSQL is running: <code>pg_isready -h localhost -p 5432</code></li>
+            <li>Verify <code>.env</code> has <code>DATABASE_URL="postgresql://postgres:postgres@localhost:5432/armarketer"</code></li>
+            <li>Run <code>npx prisma migrate deploy</code> if migrations are pending.</li>
+        </ul>
+
+        <h3>TypeScript errors in server code</h3>
+        <p>Run <code>npm run typecheck:server</code>. This runs <code>prisma generate</code> first, then <code>tsc -p tsconfig.server.json --noEmit</code>. If Prisma client is out of date, <code>npx prisma generate</code> alone is enough to fix phantom type errors.</p>
+
+        <h3>Asset upload returns 413</h3>
+        <p>The Express host accepts up to 500 MB for binary PUT requests. If you hit 413 on a JSON endpoint, the body exceeds the 1 MB JSON limit — check you are not base64-encoding a file into a JSON field.</p>
+    </div>
+
+    <div class="card">
+        <h2>10. Next Recommended Task</h2>
         <p>With TASK-009 (Target-Experience Binding) completed, the next recommended step is:</p>
         <p><strong>Hotspot editor UI initial version</strong> (W5) or <strong>MindAR + React/R3F integration spike</strong> (W6).</p>
     </div>
