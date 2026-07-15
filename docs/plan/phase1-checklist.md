@@ -101,9 +101,18 @@
 
 ## W9 — Acceptance
 
-- [ ] 3 legacy Zapworks cards rebuilt
+- [ ] 3 end-to-end Demo AR experiences created with existing assets
+  - Demo 1: `factory-lod0-opt.glb` + test marker image (3D model AR overlay)
+  - Demo 2: second GLB asset + marker image (different transform / scale config)
+  - Demo 3: `concrete-rubble-scan` OBJ → GLB + marker image (scan-origin model)
+  - Each demo must complete full flow: upload → bind → scan → AR overlay visible on device
 - [ ] Pressure / cache / CDN validation
 - [ ] Gate 4 result logged
+
+> **Note (2026-07-15):** Original criterion was "3 legacy Zapworks cards rebuilt" but source
+> Zapworks assets are not available. Gate 4 redefined as 3 self-contained Demo AR experiences
+> using existing repo assets. Functional coverage is equivalent. Real Zapworks migration
+> can be treated as a Phase 2 workstream once assets are available.
 
 ## W10 — Launch
 
@@ -119,4 +128,4 @@
 | Gate 1 | MindAR stable on target phones | `PASSED` | iOS Safari + Android Chrome — smooth stable tracking, no crash, detection <8s. Tested 2026-05-21 via localtunnel. Evidence: `docs/session/2026-05-21-gate1-test-protocol.md` |
 | Gate 2 | 100MB-class asset loadability proven | `pass-with-warnings` | Desktop and mobile evidence now exist for `cyberpunk_city.glb`; iPhone 14 Safari and Pixel 6 Chrome completed load without crash/context loss, but observed load times were ~27-30s and no remote-debug trace was captured |
 | Gate 3 | Optimized GLB pipeline output accepted | `PASSED` | Visual smoke test successful (2.62MB); Docker-free pipeline formalized; evidence recorded in docs/session/2026-05-15-gate3-evidence-note.md |
-| Gate 4 | 3 legacy cards rebuilt and accepted | `not-started` | Future milestone |
+| Gate 4 | 3 end-to-end Demo AR experiences accepted | `not-started` | W9 milestone — redefined 2026-07-15: using existing repo assets instead of unavailable Zapworks source cards |

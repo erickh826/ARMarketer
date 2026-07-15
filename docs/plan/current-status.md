@@ -10,7 +10,7 @@
 | Gate 1 | MindAR stable on target phones | `PASSED` | iOS Safari + Android Chrome stable, <8s detection, no crash — `docs/session/2026-05-21-gate1-test-protocol.md` |
 | Gate 2 | 100MB-class asset loadability proven | `PASS-WITH-WARNINGS` | Desktop + real-device mobile (iPhone 14, Pixel 6) loaded ~136 MB GLB; ~27-30s load times, no crash — `docs/session/2026-05-14-gate2-report.md`, `docs/session/2026-05-14-gate2-mobile-report.md` |
 | Gate 3 | Optimized GLB pipeline output accepted | `PASSED` | 171 MB OBJ → 2.62 MB GLB via Docker-free `trimesh` + `gltf-transform` — `docs/session/2026-05-15-gate3-report.md` |
-| Gate 4 | 3 legacy cards rebuilt and accepted | `NOT STARTED` | W9 milestone |
+| Gate 4 | 3 end-to-end Demo AR experiences accepted | `NOT STARTED` | W9 milestone — redefined 2026-07-15: 3 Demo AR experiences using existing repo assets (factory GLB, second GLB, scan-origin GLB), each completing upload→bind→scan→overlay flow on device. Zapworks source cards unavailable; real migration deferred to Phase 2. |
 
 ## Workstream Status
 
