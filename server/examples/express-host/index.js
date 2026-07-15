@@ -131,6 +131,14 @@ function targetBindContext(req) {
   }
 }
 
+function hotspotIdContext(req) {
+  return {
+    params: Promise.resolve({
+      id: req.params.id,
+    }),
+  }
+}
+
 async function bootstrap() {
   const port = getPort()
   ensureLocalStorageDefaults(port)
@@ -146,6 +154,8 @@ async function bootstrap() {
     { POST: createExperience, GET: listExperiences },
     { GET: getExperience, PATCH: updateExperience, DELETE: deleteExperience },
     { POST: bindTarget, DELETE: unbindTarget },
+    { GET: listHotspots, POST: createHotspot },
+    { PATCH: updateHotspot, DELETE: deleteHotspot },
   ] = await Promise.all([
     import('../next-app-router/app/api/assets/upload/route.ts'),
     import('../next-app-router/app/api/assets/derived/route.ts'),
@@ -157,6 +167,8 @@ async function bootstrap() {
     import('../next-app-router/app/api/experiences/route.ts'),
     import('../next-app-router/app/api/experiences/[id]/route.ts'),
     import('../next-app-router/app/api/targets/[id]/bind/route.ts'),
+    import('../next-app-router/app/api/experiences/[id]/hotspots/route.ts'),
+    import('../next-app-router/app/api/hotspots/[id]/route.ts'),
   ])
 
   const app = express()
@@ -265,6 +277,26 @@ async function bootstrap() {
 
   app.delete('/api/targets/:id/bind', asyncRoute(async (req, res) => {
     const response = await unbindTarget(createRequest(req), targetIdContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.get('/api/experiences/:id/hotspots', asyncRoute(async (req, res) => {
+    const response = await listHotspots(createRequest(req), experienceIdContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.post('/api/experiences/:id/hotspots', express.json({ limit: '1mb' }), asyncRoute(async (req, res) => {
+    const response = await createHotspot(createRequest(req), experienceIdContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.patch('/api/hotspots/:id', express.json({ limit: '1mb' }), asyncRoute(async (req, res) => {
+    const response = await updateHotspot(createRequest(req), hotspotIdContext(req))
+    await sendFetchResponse(response, res)
+  }))
+
+  app.delete('/api/hotspots/:id', asyncRoute(async (req, res) => {
+    const response = await deleteHotspot(createRequest(req), hotspotIdContext(req))
     await sendFetchResponse(response, res)
   }))
 

@@ -124,9 +124,27 @@ model ARExperience {
   imageTarget       ImageTarget?   @relation("TargetExperiences", fields: [imageTargetId], references: [id], onDelete: SetNull)
   mediaAsset        MediaAsset?    @relation(fields: [mediaAssetId], references: [id], onDelete: SetNull)
   boundByTarget     ImageTarget?   @relation("BoundExperience")
+  hotspots          Hotspot[]
 
   @@index([projectId])
   @@index([imageTargetId])
   @@index([mediaAssetId])
   @@index([contentType])
+}
+
+model Hotspot {
+  id            String       @id @default(cuid())
+  experienceId  String
+  title         String
+  description   String?
+  targetUrl     String?
+  /// 3D position vector {x, y, z} in model local space
+  position      Json
+  /// Surface normal vector {x, y, z} (optional, for billboard orientation)
+  normal        Json?
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  experience    ARExperience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+
+  @@index([experienceId])
 }

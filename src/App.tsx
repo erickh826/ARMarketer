@@ -1,4 +1,5 @@
 import { ModelViewer } from './components/ModelViewer';
+import { HotspotEditor } from './components/HotspotEditor';
 
 type ModelType = 'obj' | 'fbx' | 'glb';
 
@@ -57,14 +58,38 @@ function getModelFromSearchParams(): ModelConfig {
   };
 }
 
+function getEditorParamsFromSearchParams(): { experienceId: string; assetUrl: string; assetType: 'obj' | 'glb'; apiKey?: string } | null {
+  const searchParams = new URLSearchParams(window.location.search);
+  if (searchParams.get('editor') !== 'true') return null;
+  const experienceId = searchParams.get('experienceId');
+  const assetUrl = searchParams.get('assetUrl');
+  const rawType = searchParams.get('assetType');
+  const assetType = rawType === 'obj' ? 'obj' : 'glb';
+  if (!experienceId || !assetUrl) return null;
+  return { experienceId, assetUrl, assetType, apiKey: searchParams.get('apiKey') ?? undefined };
+}
+
 function App() {
+  const editorParams = getEditorParamsFromSearchParams();
+
+  if (editorParams) {
+    return (
+      <HotspotEditor
+        experienceId={editorParams.experienceId}
+        assetUrl={editorParams.assetUrl}
+        assetType={editorParams.assetType}
+        apiKey={editorParams.apiKey}
+      />
+    );
+  }
+
   const model = getModelFromSearchParams();
 
   return (
     <main style={{ width: '100%', height: '100vh' }}>
-      <ModelViewer 
-        url={model.url} 
-        type={model.type} 
+      <ModelViewer
+        url={model.url}
+        type={model.type}
         textureUrl={model.textureUrl}
         normalUrl={model.normalUrl}
       />
