@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3'
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner'
 import type { StorageProvider } from '@prisma/client'
@@ -39,7 +40,7 @@ export class LocalStorageService implements StorageService {
 
   buildObjectKey(input: { projectId: string; filename: string; prefix?: string }) {
     const directory = input.prefix ?? 'assets'
-    return `${directory}/${input.projectId}/${Date.now()}-${sanitizeFilename(input.filename)}`
+    return `${directory}/${input.projectId}/${randomUUID()}-${sanitizeFilename(input.filename)}`
   }
 
   async createUploadAuthorization(
@@ -91,7 +92,7 @@ export class S3CompatibleStorageService implements StorageService {
 
   buildObjectKey(input: { projectId: string; filename: string; prefix?: string }) {
     const directory = input.prefix ?? 'assets'
-    return `${directory}/${input.projectId}/${Date.now()}-${sanitizeFilename(input.filename)}`
+    return `${directory}/${input.projectId}/${randomUUID()}-${sanitizeFilename(input.filename)}`
   }
 
   async createUploadAuthorization(

@@ -1,4 +1,5 @@
-import { arExperienceService, imageTargetService } from '../../../../../lib/services.js'
+import { BindConflictError } from '../../../../../../../services/image-target.service.js'
+import { imageTargetService } from '../../../../../lib/services.js'
 import { toJsonSafe } from '../../../../../../../lib/json.js'
 import { requireApiKey } from '../../../../../lib/api-key-auth.js'
 
@@ -19,32 +20,14 @@ export async function POST(request: Request, context: RouteContext) {
   const authError = await requireApiKey(request, target.projectId)
   if (authError) return authError
 
-  const experience = await arExperienceService.findById(experienceId)
-  if (!experience) {
-    return Response.json({ error: 'Experience not found.' }, { status: 404 })
-  }
-
-  if (experience.projectId !== target.projectId) {
-    return Response.json(
-      { error: 'Experience and target must belong to the same project.' },
-      { status: 422 },
-    )
-  }
-
-  if (experience.imageTargetId !== targetId) {
-    return Response.json(
-      { error: 'Experience imageTargetId must match the target being bound.' },
-      { status: 422 },
-    )
-  }
-
   try {
-    const updated = await imageTargetService.update(targetId, { boundExperienceId: experienceId })
+    const updated = await imageTargetService.bindExperience(targetId, experienceId, target.projectId)
     return Response.json(toJsonSafe(updated))
   } catch (error) {
-    if (error instanceof Error) {
+    if (error instanceof BindConflictError)
+      return Response.json({ error: error.message }, { status: 409 })
+    if (error instanceof Error)
       return Response.json({ error: error.message }, { status: 422 })
-    }
     return Response.json({ error: 'Unexpected error.' }, { status: 500 })
   }
 }
@@ -60,6 +43,6 @@ export async function DELETE(request: Request, context: RouteContext) {
   const authError = await requireApiKey(request, target.projectId)
   if (authError) return authError
 
-  await imageTargetService.update(targetId, { boundExperienceId: null })
+  await imageTargetService.unbindExperience(targetId)
   return new Response(null, { status: 204 })
 }

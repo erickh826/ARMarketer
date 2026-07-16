@@ -1,5 +1,5 @@
 import type { Prisma } from '@prisma/client'
-import { arExperienceService, imageTargetService } from '../../../../lib/services.js'
+import { arExperienceService } from '../../../../lib/services.js'
 import { toJsonSafe } from '../../../../../../lib/json.js'
 import { requireApiKey } from '../../../../lib/api-key-auth.js'
 
@@ -43,16 +43,6 @@ export async function PATCH(request: Request, context: RouteContext) {
 
   const body = await request.json() as PatchExperienceBody
 
-  if (body.imageTargetId) {
-    const target = await imageTargetService.findById(body.imageTargetId)
-    if (!target || target.projectId !== experience!.projectId) {
-      return Response.json(
-        { error: 'imageTargetId must belong to the same project.' },
-        { status: 422 },
-      )
-    }
-  }
-
   const updateData: Prisma.ARExperienceUncheckedUpdateInput = {}
   if (body.name !== undefined) updateData.name = body.name
   if (body.imageTargetId !== undefined) updateData.imageTargetId = body.imageTargetId
@@ -66,8 +56,14 @@ export async function PATCH(request: Request, context: RouteContext) {
     return Response.json(toJsonSafe(experience!))
   }
 
-  const updated = await arExperienceService.update(id, updateData)
-  return Response.json(toJsonSafe(updated))
+  try {
+    const updated = await arExperienceService.updateWithValidation(id, updateData)
+    return Response.json(toJsonSafe(updated))
+  } catch (error) {
+    if (error instanceof Error)
+      return Response.json({ error: error.message }, { status: 422 })
+    return Response.json({ error: 'Unexpected error.' }, { status: 500 })
+  }
 }
 
 export async function DELETE(request: Request, context: RouteContext) {

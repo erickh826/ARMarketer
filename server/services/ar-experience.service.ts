@@ -65,6 +65,27 @@ export class ARExperienceService {
     return this.prisma.aRExperience.update({ where: { id }, data })
   }
 
+  async updateWithValidation(id: string, data: Prisma.ARExperienceUncheckedUpdateInput) {
+    return this.prisma.$transaction(async (tx) => {
+      const experience = await tx.aRExperience.findUnique({ where: { id } })
+      if (!experience) throw new Error('Experience not found.')
+
+      if (data.imageTargetId) {
+        const target = await tx.imageTarget.findUnique({ where: { id: data.imageTargetId as string } })
+        if (!target || target.projectId !== experience.projectId)
+          throw new Error('imageTargetId must belong to the same project.')
+      }
+
+      if (data.mediaAssetId) {
+        const asset = await tx.mediaAsset.findUnique({ where: { id: data.mediaAssetId as string } })
+        if (!asset || asset.projectId !== experience.projectId)
+          throw new Error('mediaAssetId must belong to the same project.')
+      }
+
+      return tx.aRExperience.update({ where: { id }, data })
+    })
+  }
+
   updateSceneConfig(
     id: string,
     data: Pick<
