@@ -3,29 +3,40 @@
 ## Metadata
 
 - Task ID: `TASK-011`
-- Default role: `planner`
-- Suggested first agent: `copilot`
-- Status: `todo`
+- Default role: `implementer`
+- Suggested first agent: `codex`
+- Status: `in-progress`
 - Priority: `medium`
 
 ## Objective
 
-Design and plan the initial version of the Hotspot Editor UI. This UI will allow users to view, create, edit, and position hotspots for an `ARExperience`.
+Close out the initial Hotspot Editor baseline so repo documentation matches implementation reality. The hotspot schema, API routes, and React editor scaffold already exist; the remaining work is to verify runtime behavior, capture evidence, and tighten any missing UX/runtime gaps needed for a credible Phase 1 baseline.
 
 ## Current Repo Truth
 
 - Read `docs/agents/shared-context.md` first.
-- The `ARExperience` entity and endpoints have already been completed in TASK-009/TASK-010.
-- Hotspot data structure should exist on `ARExperience` (or as a separate related entity). We need to review the `prisma.schema` to ensure the structure exists, or plan the schema update if it doesn't.
-- This is a UI planning task. Implementation will follow in subsequent tasks depending on the size of the plan.
+- `ARExperience` entity and endpoints are already completed.
+- Prisma already defines `Hotspot` and `ARExperience.hotspots`.
+- Example host already mounts:
+  - `GET /api/experiences/:id/hotspots`
+  - `POST /api/experiences/:id/hotspots`
+  - `PATCH /api/hotspots/:id`
+  - `DELETE /api/hotspots/:id`
+- React editor files already exist:
+  - `src/components/HotspotEditor.tsx`
+  - `src/components/EditorCanvas.tsx`
+  - `src/components/EditorSidebar.tsx`
+  - `src/App.tsx` supports `?editor=true`
+- The main gap is no clean close-out artifact proving the hotspot baseline works end-to-end in the current repo state.
 
 ## Owned Files
 
-- `docs/plan/TASK-011-plan.md` (to be created)
+- `docs/plan/TASK-011-plan.md`
+- `docs/agents/results/TASK-011-implementer.md`
+- `docs/agents/reviews/TASK-011-review.md`
 
 ## Role-Based Output Convention
 
-- `planner` -> `docs/plan/TASK-011-plan.md`
 - `implementer` -> `docs/agents/results/TASK-011-implementer.md`
 - `reviewer` -> `docs/agents/reviews/TASK-011-review.md`
 
@@ -37,24 +48,39 @@ Design and plan the initial version of the Hotspot Editor UI. This UI will allow
 
 - `docs/plan/W5-W6-roadmap.md`
 - `prisma/schema.prisma`
-- Existing UI components, specifically `ModelViewer.tsx` (as it might be reused or extended for the editor).
+- `server/examples/next-app-router/app/api/experiences/[id]/hotspots/route.ts`
+- `server/examples/next-app-router/app/api/hotspots/[id]/route.ts`
+- Existing UI components:
+  - `src/components/HotspotEditor.tsx`
+  - `src/components/EditorCanvas.tsx`
+  - `src/components/EditorSidebar.tsx`
+  - `src/App.tsx`
 
 ## Required Output
 
-- For the default role (`planner`):
-  - `docs/plan/TASK-011-plan.md`
-- Include:
-  - Required schema changes (if any) for Hotspots.
-  - Required API additions (if any) to support Hotspot UI.
-  - Component breakdown for the Editor UI (e.g., Sidebar list, 3D Canvas with click-to-place, Property panel).
-  - State management considerations for editing before saving.
+For the default role (`implementer`):
+- `docs/agents/results/TASK-011-implementer.md`
+
+Include:
+- runtime verification scope for hotspot baseline
+- what already exists vs. what still needs cleanup
+- whether local DB sync (`npx prisma db push`) is required before testing
+- any remaining UX/runtime gaps that keep the editor at `partial` instead of `done`
+
+`docs/plan/TASK-011-plan.md` should reflect the revised close-out plan rather than the original speculative schema/API design.
 
 ## Validation
 
-- Review by another agent/human to ensure the plan covers all necessary aspects to implement a functional hotspot editor.
+- Reviewer should confirm the task/plan now match repo reality and do not describe hotspot schema/API as future work.
+- Runtime validation should cover:
+  - loading hotspots for an experience
+  - creating a hotspot via editor/API
+  - editing a hotspot
+  - deleting a hotspot
+  - behavior when local DB schema is not yet synced
 
 ## Notes
 
 - Keep findings short and concrete.
-- Check how hotspots will be represented visually in the 3D space during editing vs. viewing.
-- The current priority is planning the UI surface.
+- Do not rewrite history by pretending the hotspot baseline never landed.
+- The current priority is evidence + cleanup, not speculative redesign.

@@ -113,7 +113,8 @@ Project (Top level namespace with API Key)
         <div class="highlight">
             <strong>Current Priority (W5 & W6):</strong>
             <ul>
-                <li><strong>W5 Completed:</strong> TASK-008 ImageTarget CRUD, TASK-009 ARExperience CRUD + Bind/Unbind, TASK-010 team guide + verification, TASK-011 Hotspot Editor UI, P0 concurrency hardening (bind CAS, PATCH IDOR, storageKey UUID).</li>
+                <li><strong>W5 Completed:</strong> TASK-008 ImageTarget CRUD, TASK-009 ARExperience CRUD + Bind/Unbind, TASK-010 team guide + verification.</li>
+                <li><strong>W5 In Progress:</strong> Hotspot data model + API are present in repo, and a React hotspot editor scaffold exists, but formal close-out docs still lag repo reality.</li>
                 <li><strong>W6:</strong> MindAR + React/R3F integration spike (embedding tracking in React).</li>
                 <li><strong>W6:</strong> Viewer reads CMS data (<code>GET /api/projects/:slug/experience</code> drives the viewer instead of query parameters).</li>
             </ul>
@@ -245,9 +246,10 @@ curl -s -X DELETE \
 
     <div class="card">
         <h2>10. Next Recommended Task</h2>
-        <p>W5 is fully complete. The next milestone is <strong>W6</strong>:</p>
+        <p>W5 is late-stage but not fully closed in docs. Recommended next steps:</p>
         <ul>
-            <li>Run <code>npx prisma db push</code> (start PostgreSQL first) to create the <code>Hotspot</code> table so TASK-011 hotspot API works at runtime.</li>
+            <li>Run <code>npx prisma db push</code> (start PostgreSQL first) if your local DB is missing the <code>Hotspot</code> table, then verify the hotspot API/editor flow.</li>
+            <li>Use editor mode to smoke-test the current scaffold: <code>?editor=true&amp;experienceId=&lt;EXPERIENCE_ID&gt;&amp;assetUrl=&lt;MODEL_URL&gt;&amp;assetType=glb</code>.</li>
             <li><strong>MindAR + React/R3F integration spike</strong> — embed MindAR tracking in React, replacing the A-Frame POC.</li>
             <li><strong>Viewer reads CMS data</strong> — <code>GET /api/projects/:slug/experience</code> drives the viewer instead of query parameters.</li>
         </ul>

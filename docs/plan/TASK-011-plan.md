@@ -1,85 +1,159 @@
-# TASK-011 Plan — Hotspot Editor UI Initial Version
+# TASK-011 Plan — Hotspot Baseline Close-Out
 
-> Planning document for W5 milestone: Hotspot Editor UI
-> Date: 2026-07-15
+> Revised close-out plan for the existing W5 hotspot baseline
+> Last updated: 2026-07-31
 
 ## Overview
 
-We need to build a UI to allow users to place, edit, and configure "hotspots" in the 3D space of an `ARExperience`. Hotspots are interactive points (like info buttons, labels, links) overlaid on the 3D model.
+The original TASK-011 planning document assumed hotspot schema, API, and editor UI did not yet exist. That is no longer true. The repo already contains:
 
-## 1. Schema Changes (Prisma)
+- Prisma `Hotspot` model and `ARExperience.hotspots` relation
+- Example API routes for list/create/update/delete hotspot operations
+- Express-host mounting for those routes
+- A React hotspot editor scaffold enabled through `?editor=true`
 
-Currently, the `ARExperience` model has a `contentSceneId`, `transform`, and `animationConfig` (all `Json?`). It currently lacks a dedicated Hotspot structure. Since hotspots are strongly tied to an experience, we should define a distinct `Hotspot` model with a many-to-one relationship to `ARExperience`.
+The remaining problem is documentation and validation lag: repo reality advanced further than the task artifacts. This plan redefines TASK-011 as a close-out task for the existing hotspot baseline.
 
-### Planned Prisma Update:
-```prisma
-model ARExperience {
-  // ... existing fields
-  hotspots Hotspot[]
-}
+## 1. What Already Exists
 
-model Hotspot {
-  id              String       @id @default(cuid())
-  experienceId    String
-  title           String
-  description     String?
-  targetUrl       String?
-  /// 3D position vector {x,y,z}
-  position        Json
-  /// Normal vector to align hotspot {x,y,z} (optional)
-  normal          Json?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+### Schema
 
-  experience      ARExperience @relation(fields: [experienceId], references: [id], onDelete: Cascade)
+Present in `prisma/schema.prisma`:
 
-  @@index([experienceId])
-}
-```
+- `ARExperience.hotspots`
+- `Hotspot` model with:
+  - `experienceId`
+  - `title`
+  - `description`
+  - `targetUrl`
+  - `position`
+  - `normal`
 
-## 2. API Additions
+### API
 
-We need CRUD routes for Hotspots, likely nested under experiences.
+Present in server example app:
 
-### Planned Endpoints:
-- `GET /api/experiences/:id/hotspots` - List hotspots for experience
-- `POST /api/experiences/:id/hotspots` - Create hotspot
-- `PATCH /api/hotspots/:id` - Update hotspot (move, edit text)
-- `DELETE /api/hotspots/:id` - Remove hotspot
+- `GET /api/experiences/:id/hotspots`
+- `POST /api/experiences/:id/hotspots`
+- `PATCH /api/hotspots/:id`
+- `DELETE /api/hotspots/:id`
 
-*Security:* Use existing `requireApiKey` middleware to ensure ownership via `ARExperience` -> `Project`.
+Mounted by `server/examples/express-host/index.js`.
 
-## 3. UI Component Breakdown
+### UI
 
-The Hotspot Editor will likely be a React component wrapping existing 3D viewers.
+Present in React app:
 
-### `HotspotEditor.tsx` (Main Container)
-- Holds editor state (current experience, loaded hotspots, selected hotspot).
-- Provides context for 3D interactions.
+- `src/components/HotspotEditor.tsx`
+- `src/components/EditorCanvas.tsx`
+- `src/components/EditorSidebar.tsx`
+- `src/App.tsx` entry via `?editor=true&experienceId=...&assetUrl=...&assetType=glb`
 
-### `EditorSidebar.tsx`
-- **List View:** Shows all hotspots. Allows selection, deletion, or viewing details.
-- **Edit View:** Form to edit Title, Description, and Link.
-- **Add Mode:** Toggles "click-to-place" behavior in the 3D canvas.
+## 2. Remaining Gaps
 
-### `EditorCanvas.tsx` (extends logic from `ModelViewer.tsx`)
-- Renders the `MediaAsset`.
-- Iterates and renders `HotspotMarker` components at their respective `{x,y,z}` coordinates using `@react-three/drei`'s `<Html>`.
-- Implements `onClick` handler via Raycaster. If "Add Mode" is active, clicking the 3D model records the intersection point (and normal) and dispatches a "hotspot placed" event.
+The hotspot baseline should currently be treated as **partial**, not absent and not fully closed. The main remaining gaps are:
 
-## 4. State Management (React)
+1. **Runtime verification evidence is missing or scattered**
+   - We need one clean artifact showing the editor/API flow works end-to-end.
 
-- Use a local `useReducer` or simple `useState` to track:
-  - `hotspots[]` (optimistic UI updates)
-  - `selectedHotspotId`
-  - `editorMode`: `'view' | 'add' | 'edit'`
-- When placing a hotspot, keep it in an "unsaved" local state until the user fills the form and hits Save (POST).
+2. **Local DB sync may block testing**
+   - If a local developer DB predates the `Hotspot` model, hotspot routes will fail until `npx prisma db push` is run.
 
-## Next Steps for Implementation
+3. **Task artifacts still describe old reality**
+   - Older task/plan docs talk about hotspot schema/API as future work.
 
-1. **Schema Update:** Update `prisma/schema.prisma` and run `npx prisma db push` (or migrate).
-2. **Backend API:** Implement the 4 endpoints.
-3. **Frontend UI:** Build the React components.
+4. **Potential UX polish gaps**
+   - Editor is functional as a baseline, but may still need lightweight polish or edge-case cleanup before it can be marked fully done in the checklist.
 
-**Estimates Effort:** 4-6 hours
-**Dependencies:** Requires `ARExperience` to exist (completed in TASK-009/010).
+## 3. Required Verification Scope
+
+TASK-011 close-out should verify the following:
+
+1. **Read**
+   - Load existing hotspots for an experience through `GET /api/experiences/:id/hotspots`
+
+2. **Create**
+   - Add a hotspot via editor mode or direct API call
+   - Confirm persisted title + position
+
+3. **Update**
+   - Edit hotspot title/description/targetUrl
+   - Confirm `PATCH /api/hotspots/:id` returns updated record
+
+4. **Delete**
+   - Remove hotspot and confirm it no longer appears in list
+
+5. **Local prerequisite**
+   - Confirm whether local DB required `npx prisma db push`
+
+## 4. Recommended Close-Out Artifact
+
+The implementer result should explicitly capture:
+
+- test environment
+  - backend host
+  - DB readiness
+  - whether `db push` was required
+- editor entry URL used
+- hotspot CRUD evidence
+- known remaining UX/runtime limitations
+- verdict:
+  - keep `partial`, or
+  - promote to `done`
+
+## 5. Status Recommendation
+
+Until runtime evidence is captured cleanly, the repo should use this wording:
+
+- `Hotspot data model + API`: `Complete`
+- `Hotspot editor UI initial version`: `Partial`
+
+That wording matches the current codebase more accurately than either of these extremes:
+
+- "Not started"
+- "Fully complete"
+
+## 6. Known Follow-Up Hardening (Not a TASK-011 Blocker)
+
+The hotspot baseline can be closed without solving every multi-editor concurrency risk. Those risks are real, but they belong to a separate hardening workstream rather than the baseline proof itself.
+
+### Lost Update / Optimistic Concurrency
+
+Current editor save flow is vulnerable to classic CMS-style last-write-wins behavior if two users edit the same hotspot at the same time. The close-out artifact for TASK-011 should explicitly record this as a known limitation if runtime verification passes.
+
+Recommended hardening direction:
+
+- add optimistic concurrency protection for hotspot and experience updates
+- prefer a dedicated `version` field or `updatedAt` compare-and-swap semantics
+- return `409 Conflict` on stale writes so the editor can reload and retry
+
+This should be handled as a separate task because it requires changes across:
+
+- `prisma/schema.prisma`
+- hotspot / experience update routes
+- service-layer update semantics
+- editor save contract
+
+### Suggested Non-Blocking Note for TASK-011 Result
+
+If the hotspot editor works at runtime, the result should say:
+
+- baseline UX/API works
+- multi-editor lost-update protection is **not yet hardened**
+- follow-up tracked under a separate concurrency task
+
+## 7. Next Steps
+
+1. Run local prerequisite if needed:
+   - `npx prisma db push`
+2. Start backend:
+   - `npm run dev:example-host`
+3. Start frontend:
+   - `npm run dev`
+4. Open editor mode with a real `experienceId` and asset URL
+5. Record hotspot CRUD evidence in `docs/agents/results/TASK-011-implementer.md`
+
+## 8. Notes
+
+- Do not reopen speculative schema design unless repo code is rolled back.
+- Treat this as a close-out and evidence task, not a blank-slate planning task.

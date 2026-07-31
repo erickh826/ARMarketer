@@ -1,6 +1,6 @@
 # Phase 1 Checklist
 
-> Last updated: 2026-06-12
+> Last updated: 2026-07-31
 > Status legend: `[x] done` / `[-] partial` / `[ ] not started`
 
 ## W1 — Feasibility
@@ -77,8 +77,11 @@
   - TASK-009: Create ARExperience CRUD routes + bind/unbind endpoints
   - Required output: 7 routes mounted (POST/GET /api/experiences, GET/PATCH/DELETE /api/experiences/:id, POST/DELETE /api/targets/:id/bind)
   - Planning: `docs/plan/TASK-009-plan.md`
-- [ ] Hotspot editor UI initial version
-  - Depends on TASK-009 completion
+- [x] Hotspot data model and API routes exist
+  - Evidence: `prisma/schema.prisma` (`Hotspot` model), `server/examples/next-app-router/app/api/experiences/[id]/hotspots/route.ts`, `server/examples/next-app-router/app/api/hotspots/[id]/route.ts`, mounted in `server/examples/express-host/index.js`
+- [-] Hotspot editor UI initial version
+  - Evidence: `src/components/HotspotEditor.tsx`, `src/components/EditorCanvas.tsx`, `src/components/EditorSidebar.tsx`, `src/App.tsx` editor-mode entry
+  - Note: repo implementation exists, but formal close-out / runtime validation is not fully recorded in the current task artifacts
 
 ## W6 — AR Experience Read Path
 

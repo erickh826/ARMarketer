@@ -134,7 +134,7 @@ const FBXModel = ({ url, texture, normal }: { url: string; texture?: THREE.Textu
 };
 
 const GLBModel = ({ url }: { url: string }) => {
-  const gltf = useGLTF(url, true);
+  const gltf = useGLTF(url);
 
   useEffect(() => {
     gltf.scene.traverse((child) => {

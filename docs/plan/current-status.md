@@ -1,6 +1,6 @@
 # ARMarketer — Current Status
 
-> Last updated: 2026-06-12
+> Last updated: 2026-07-31
 > Stage: **W5 in progress**
 
 ## Gate Summary
@@ -34,15 +34,17 @@
 | :--- | :--- | :--- |
 | ImageTarget management API | Complete | CRUD + source image upload + `.mind` compile stub routes + smoke test passed |
 | Target-experience binding | Complete | `ARExperience.imageTargetId` + `ImageTarget.boundExperienceId` wiring |
+| Hotspot data model + API | Complete | Prisma `Hotspot` model, `GET/POST /api/experiences/:id/hotspots`, `PATCH/DELETE /api/hotspots/:id`, all mounted on the Express host |
+| Hotspot editor UI | Partial | `src/components/HotspotEditor.tsx`, `EditorCanvas.tsx`, `EditorSidebar.tsx`, enabled via `?editor=true&experienceId=...&assetUrl=...`; formal close-out docs still lag repo state |
 | MindAR + React/R3F integration | Not started | Embed tracking in React app, replace A-Frame POC |
 | Viewer reads CMS data | Not started | `GET /api/projects/:slug/experience` drives the viewer |
-| Hotspot editor UI | Not started | W5 follow-up |
 
 ## Immediate Truths for W5 Agents
 
 1. The express host (`npm run dev:example-host`) is the runnable backend. DB is PostgreSQL at `localhost:5432/armarketer` (via `.env`).
 2. Test project: `id=001`, `slug=smoke-test`, `apiKey=test-key-001`.
 3. Write routes require `x-api-key` header when the project has an `apiKey` set.
-4. MindAR library version is locked at **1.2.5** (the tested version). Do not upgrade without re-running Gate 1.
-5. R2 credentials are a deploy-time concern. `LOCAL` storage is the dev default (`ASSET_STORAGE_PROVIDER=LOCAL`).
-6. Archived W1–W4 task artifacts are in `docs/archive/tasks-w1-w4/` and `docs/archive/sessions-w1-w4/` — do not move them back.
+4. Hotspot runtime depends on the local DB schema being synced. If the `Hotspot` table is missing locally, run `npx prisma db push` before testing the editor/API flow.
+5. MindAR library version is locked at **1.2.5** (the tested version). Do not upgrade without re-running Gate 1.
+6. R2 credentials are a deploy-time concern. `LOCAL` storage is the dev default (`ASSET_STORAGE_PROVIDER=LOCAL`).
+7. Archived W1–W4 task artifacts are in `docs/archive/tasks-w1-w4/` and `docs/archive/sessions-w1-w4/` — do not move them back.

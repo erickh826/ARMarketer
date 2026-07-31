@@ -1,6 +1,6 @@
 # Shared Context
 
-> Last updated: 2026-06-12
+> Last updated: 2026-07-31
 > This file is the shared source of truth for external CLI agents working on this repo.
 
 ## Repo
@@ -24,6 +24,8 @@
 7. **Service layer is complete:** `Project`, `MediaAsset`, `ImageTarget`, `ARExperience` services all exist and are tested. Prisma schema has `apiKey` on Project.
 8. **Viewer skeleton** in `src/components/ModelViewer.tsx` supports OBJ, FBX, GLB. `src/App.tsx` supports `?url=` query-param targeting for local validation.
 9. **W5 ImageTarget API baseline is complete:** `POST/GET /api/targets`, `GET/PATCH/DELETE /api/targets/:id`, and `POST /api/targets/:id/compile` are implemented and mounted; checklist records smoke test pass on 2026-06-04.
+10. **W5 target-experience binding is complete:** `ARExperience` CRUD plus `/api/targets/:id/bind/:experienceId` and `/api/targets/:id/bind` are implemented and mounted on the Express host.
+11. **Hotspot baseline exists in repo:** Prisma now defines `Hotspot`, the example host mounts `GET/POST /api/experiences/:id/hotspots` and `PATCH/DELETE /api/hotspots/:id`, and the React app contains `HotspotEditor.tsx`, `EditorCanvas.tsx`, and `EditorSidebar.tsx` behind `?editor=true`. Formal close-out docs for this baseline are still lagging.
 
 ## Primary Planning Files
 
@@ -34,10 +36,9 @@
 
 ## Current Recommended Priority
 
-1. **W5 — Target-experience binding:** Associate an `ARExperience` to an `ImageTarget` via `boundExperienceId`.
-2. **W5 — Hotspot editor UI initial version:** Start editor surface after target binding baseline exists.
-3. **W6 — MindAR + React/R3F integration spike:** Embed MindAR in the React app (not just A-Frame POC) using the confirmed tracking library.
-4. **W6 — Viewer reads CMS-backed experience:** `GET /api/projects/:slug/experience` drives the viewer instead of query-param assets.
+1. **W5 — Close hotspot baseline cleanly:** Treat hotspot schema/API/editor as present in repo, but verify local DB sync (`npx prisma db push` if needed) and reconcile any missing close-out docs.
+2. **W6 — MindAR + React/R3F integration spike:** Embed MindAR in the React app (not just A-Frame POC) using the confirmed tracking library.
+3. **W6 — Viewer reads CMS-backed experience:** `GET /api/projects/:slug/experience` drives the viewer instead of query-param assets.
 
 ## Collaboration Rules
 
