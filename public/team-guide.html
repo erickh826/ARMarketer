@@ -76,7 +76,7 @@
             <li><strong>Gate 1 (PASSED):</strong> MindAR 1.2.5 stable on iOS Safari & Android Chrome.</li>
             <li><strong>Gate 2 (PASS-WITH-WARNINGS):</strong> 100MB-class assets load successfully, but with ~30s load times.</li>
             <li><strong>Gate 3 (PASSED):</strong> Optimized GLB pipeline via Docker-free trimesh + gltf-transform.</li>
-            <li><strong>Gate 4 (NOT STARTED):</strong> 3 legacy cards rebuilt (Planned for W9).</li>
+            <li><strong>Gate 4 (NOT STARTED):</strong> 3 Demo AR experiences using existing repo assets — Option A (Zapworks migration deferred to Phase 2, planned for W9).</li>
         </ul>
     </div>
 
@@ -113,8 +113,7 @@ Project (Top level namespace with API Key)
         <div class="highlight">
             <strong>Current Priority (W5 & W6):</strong>
             <ul>
-                <li><strong>W5 Completed:</strong> Target-experience binding routes are done (TASK-009).</li>
-                <li><strong>W5 Next:</strong> Hotspot editor UI initial version.</li>
+                <li><strong>W5 Completed:</strong> TASK-008 ImageTarget CRUD, TASK-009 ARExperience CRUD + Bind/Unbind, TASK-010 team guide + verification, TASK-011 Hotspot Editor UI, P0 concurrency hardening (bind CAS, PATCH IDOR, storageKey UUID).</li>
                 <li><strong>W6:</strong> MindAR + React/R3F integration spike (embedding tracking in React).</li>
                 <li><strong>W6:</strong> Viewer reads CMS data (<code>GET /api/projects/:slug/experience</code> drives the viewer instead of query parameters).</li>
             </ul>
@@ -146,7 +145,7 @@ Project (Top level namespace with API Key)
 
     <div class="card">
         <h2>7. TASK-009 API Workflow — ARExperience CRUD & Binding</h2>
-        <p>All endpoints below require the <code>x-api-key</code> header matching the project's API key. The backend runs on <code>http://localhost:3001</code> via <code>npm run dev:example-host</code>.</p>
+        <p>The <code>x-api-key</code> header is required <strong>only when the project has an API key set</strong>. Projects with a <code>null</code> API key are open — no header needed. The backend runs on <code>http://localhost:3001</code> via <code>npm run dev:example-host</code>.</p>
 
         <h3>Create an Experience</h3>
         <div class="flow-diagram">POST /api/experiences
@@ -161,7 +160,8 @@ curl -s -X POST http://localhost:3001/api/experiences \
   }'
 # Returns 201 with the created ARExperience object.
 # Required: projectId, name, contentType. Returns 400 if any are missing.
-# Returns 422 if a constraint is violated (e.g. duplicate name).</div>
+# Returns 422 if imageTargetId or mediaAssetId belongs to a different project,
+# or if projectId does not exist.</div>
 
         <h3>List Experiences for a Project</h3>
         <div class="flow-diagram">GET /api/experiences?projectId=&lt;PROJECT_ID&gt;
@@ -233,7 +233,7 @@ curl -s -X DELETE \
         <ul>
             <li>Check PostgreSQL is running: <code>pg_isready -h localhost -p 5432</code></li>
             <li>Verify <code>.env</code> has <code>DATABASE_URL="postgresql://postgres:postgres@localhost:5432/armarketer"</code></li>
-            <li>Run <code>npx prisma migrate deploy</code> if migrations are pending.</li>
+            <li>Run <code>npx prisma db push</code> to sync the schema (this repo uses <code>db push</code>; there is no migrations directory).</li>
         </ul>
 
         <h3>TypeScript errors in server code</h3>
@@ -245,8 +245,12 @@ curl -s -X DELETE \
 
     <div class="card">
         <h2>10. Next Recommended Task</h2>
-        <p>With TASK-009 (Target-Experience Binding) completed, the next recommended step is:</p>
-        <p><strong>Hotspot editor UI initial version</strong> (W5) or <strong>MindAR + React/R3F integration spike</strong> (W6).</p>
+        <p>W5 is fully complete. The next milestone is <strong>W6</strong>:</p>
+        <ul>
+            <li>Run <code>npx prisma db push</code> (start PostgreSQL first) to create the <code>Hotspot</code> table so TASK-011 hotspot API works at runtime.</li>
+            <li><strong>MindAR + React/R3F integration spike</strong> — embed MindAR tracking in React, replacing the A-Frame POC.</li>
+            <li><strong>Viewer reads CMS data</strong> — <code>GET /api/projects/:slug/experience</code> drives the viewer instead of query parameters.</li>
+        </ul>
     </div>
 
 </body>
