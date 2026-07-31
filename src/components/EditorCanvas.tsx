@@ -1,5 +1,5 @@
-import { Suspense, useEffect } from 'react'
-import { Canvas, useLoader, ThreeEvent } from '@react-three/fiber'
+import { Suspense, useEffect, Component, type ReactNode, type ErrorInfo } from 'react'
+import { Canvas, useLoader, type ThreeEvent } from '@react-three/fiber'
 import {
   OrbitControls,
   PerspectiveCamera,
@@ -14,7 +14,38 @@ import type { Hotspot, Vec3 } from './HotspotEditor'
 
 useGLTF.setDecoderPath('/draco/')
 
-const EMPTY_TEXTURE_DATA_URL = 'data:image/gif;base64,R0lGODlhAQABAAAAACw='
+class CanvasErrorBoundary extends Component<{ children: ReactNode }, { error: string | null }> {
+  constructor(props: { children: ReactNode }) {
+    super(props)
+    this.state = { error: null }
+  }
+  static getDerivedStateFromError(err: unknown) {
+    return { error: err instanceof Error ? err.message : String(err) }
+  }
+  componentDidCatch(err: Error, info: ErrorInfo) {
+    console.error('[EditorCanvas] render error:', err, info)
+  }
+  render() {
+    if (this.state.error) {
+      return (
+        <div style={{
+          width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: '#1e293b', color: '#f87171', flexDirection: 'column', gap: '8px', padding: '24px',
+        }}>
+          <div style={{ fontWeight: 'bold', fontSize: '14px' }}>3D 渲染錯誤</div>
+          <div style={{ fontFamily: 'monospace', fontSize: '12px', color: '#fca5a5', textAlign: 'center', maxWidth: '400px' }}>{this.state.error}</div>
+          <button
+            onClick={() => this.setState({ error: null })}
+            style={{ marginTop: '8px', padding: '6px 16px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '13px' }}
+          >
+            重試
+          </button>
+        </div>
+      )
+    }
+    return this.props.children
+  }
+}
 
 const Loader = () => {
   const { progress } = useProgress()
@@ -84,7 +115,12 @@ interface InteractiveModelProps {
 const GLBInteractive = ({
   url, addMode, hotspots, selectedId, onPlaced, onSelectHotspot,
 }: Omit<InteractiveModelProps, 'type'>) => {
-  const gltf = useGLTF(url, true)
+  const gltf = useGLTF(url)
+  // Clone the scene so this instance owns its own copy of the object graph.
+  // useGLTF caches the result; other components (e.g. ModelViewer's GLBModel)
+  // may dispose the shared scene's geometry in their cleanup, which would make
+  // subsequent renders of the same URL show nothing.
+  const scene = gltf.scene.clone(true)
 
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     if (!addMode) return
@@ -92,9 +128,21 @@ const GLBInteractive = ({
     onPlaced({ x: e.point.x, y: e.point.y, z: e.point.z })
   }
 
+  useEffect(() => {
+    return () => {
+      scene.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.geometry.dispose()
+          const mats = Array.isArray(child.material) ? child.material : [child.material]
+          mats.forEach((m: THREE.Material) => m.dispose())
+        }
+      })
+    }
+  }, [scene])
+
   return (
     <>
-      <primitive object={gltf.scene} onClick={handleClick} />
+      <primitive object={scene} onClick={handleClick} />
       {hotspots.map((h) => (
         <HotspotMarker
           key={h.id}
@@ -157,6 +205,7 @@ export const EditorCanvas = ({
   assetUrl, assetType, addMode, hotspots, selectedId, onPlaced, onSelectHotspot,
 }: EditorCanvasProps) => {
   return (
+    <CanvasErrorBoundary>
     <div style={{
       width: '100%',
       height: '100%',
@@ -208,5 +257,6 @@ export const EditorCanvas = ({
         <OrbitControls makeDefault minPolarAngle={0} maxPolarAngle={Math.PI / 1.75} />
       </Canvas>
     </div>
+    </CanvasErrorBoundary>
   )
 }
